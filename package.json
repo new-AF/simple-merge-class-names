@@ -1,5 +1,5 @@
 {
-    "name": "a-merge-class-names",
+    "name": "simple-merge-class-names",
     "version": "1.0.0",
     "description": "Example usage: <div className = {mergeClassNames('flex', 'flex-col')}/>",
     "main": "mergeClassNames.js",
@@ -12,6 +12,6 @@
     "license": "AGPL-3.0",
     "repository": {
         "type": "git",
-        "url": "https://github.com/new-AF/a-merge-class-names"
+        "url": "https://github.com/new-AF/simple-merge-class-names"
     }
 }
