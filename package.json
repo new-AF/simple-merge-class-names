@@ -12,6 +12,10 @@
     "license": "AGPL-3.0",
     "repository": {
         "type": "git",
-        "url": "https://github.com/new-AF/simple-merge-class-names"
-    }
+        "url": "git+https://github.com/new-AF/simple-merge-class-names.git"
+    },
+    "bugs": {
+        "url": "https://github.com/new-AF/simple-merge-class-names/issues"
+    },
+    "homepage": "https://github.com/new-AF/simple-merge-class-names"
 }
