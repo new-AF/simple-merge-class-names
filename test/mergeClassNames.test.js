@@ -8,6 +8,8 @@ const cases = [
         input: [
             "app",
             undefined,
+            ["test"],
+            { key: "value" },
             "",
             "min-h-dvh",
             "grid",

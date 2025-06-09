@@ -12,6 +12,7 @@ A straightforward utility for merging CSS class names in `React + Tailwind` and 
 -   [Where This Package Excels](#where-this-package-excels)
 -   [Source Code](#source-code)
     -   [Argument Handling](#argument-handling)
+        -   [Changes From Version 1.X.X](#changes-from-version-1xx)
 -   [Testing](#testing)
 -   [Production Considerations](#production-considerations)
 -   [License](#license)
@@ -106,23 +107,32 @@ While similar packages exist (`clsx`) with better features and potentially impro
  * mergeClassNames - A straightforward utility for merging CSS class names in React + Tailwind, and other JavaScript projects.
  ...
  */
-const isDefined = (val) => val !== undefined && val !== null;
+
+const isTypeString = (val) => typeof val === "string";
 
 const isNotEmptyString = (val) => val !== "";
 
 export const mergeClassNames = (...args) => {
-    const space = " ";
-    const values = args.filter(
-        (val) => isDefined(val) && isNotEmptyString(val)
-    );
-    const className = values.join(space);
+    const space = "\x20"; // " "; ASCII code for single space character;
+
+    const stringsOnly = args.filter((val) => isTypeString(val));
+
+    const trimmed = stringsOnly.map((val) => val.trim());
+
+    const nonEmpty = trimmed.filter((val) => isNotEmptyString(val));
+
+    const className = nonEmpty.join(space);
     return className;
 };
 ```
 
 ### Argument Handling
 
-`mergeClassNames` accepts multiple arguments but filters out `null`, `undefined`, and empty strings (`""`). Remaining values are either strings or are _implicitly converted_ to strings by the JavaScript engine, then joined with spaces to produce the final class name string.
+`mergeClassNames` only accepts **_non-empty string values_**, everything else like empty strings (`""`), `null`, `undefined`, numbers, objects and arrays is _ignored_. This ensures stricter and predictable output.
+
+#### Breaking Changes From Version 1.X.X
+
+In pervious versions, arguments that were not strings were implicitly converted to strings by the JavaScript engine.
 
 ### Testing
 

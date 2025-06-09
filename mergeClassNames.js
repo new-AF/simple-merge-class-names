@@ -37,15 +37,19 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-const isDefined = (val) => val !== undefined && val !== null;
+const isTypeString = (val) => typeof val === "string";
 
 const isNotEmptyString = (val) => val !== "";
 
 export const mergeClassNames = (...args) => {
-    const space = " ";
-    const values = args.filter(
-        (val) => isDefined(val) && isNotEmptyString(val)
-    );
-    const className = values.join(space);
+    const space = "\x20"; // " "; ASCII code for single space character;
+
+    const stringsOnly = args.filter((val) => isTypeString(val));
+
+    const trimmed = stringsOnly.map((val) => val.trim());
+
+    const nonEmpty = trimmed.filter((val) => isNotEmptyString(val));
+
+    const className = nonEmpty.join(space);
     return className;
 };
