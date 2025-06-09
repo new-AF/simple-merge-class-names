@@ -44,7 +44,7 @@ Using individual strings for each class name can be tedious, however it signific
 
 ## To minimize typing strain:
 
-![Screen recording of optimal DX in action: using this package with Prettier as it neatly arranges each class name on a new line](https://github.com/new-AF/simple-merge-class-names/blob/main/assets/Reduce%20typing%20strain.gif)
+![Screen recording of optimal DX in action: using this package with Prettier as it neatly arranges each class name on a new line](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/Reduce%20typing%20strain.gif)
 
 -   Use single quotes for class names, often a single key press on many keyboards.
 -   Save the file (e.g., with `Ctrl+S`), and Prettier does the rest; it automatically:
