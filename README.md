@@ -2,6 +2,19 @@
 
 A straightforward utility for merging CSS class names in `React + Tailwind` and other JavaScript projects.
 
+## Table of Contents
+
+-   [Installation](#installation)
+    -   [Install Prettier With VSCode (Most Recommended)](#install-prettier-with-vscode-most-recommended)
+-   [Usage](#usage)
+    -   [Workflow To Minimize Typing Strain](#workflow-to-minimize-typing-strain)
+-   [Why the Mismatch Between Exported Function and Package Name?](#why-the-mismatch-between-exported-function-and-package-name)
+-   [Where This Package Excels](#where-this-package-excels)
+-   [Source Code](#source-code)
+    -   [Argument Handling](#argument-handling)
+-   [Production Considerations](#production-considerations)
+-   [License](#license)
+
 ## Installation
 
 ```bash
@@ -16,7 +29,7 @@ yarn add simple-merge-class-names
 npm install simple-merge-class-names
 ```
 
-## Install `Prettier` With VSCode (Most Recommended)
+### Install `Prettier` With VSCode (Most Recommended)
 
 [https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
@@ -58,7 +71,7 @@ function MyComponent() {
 }
 ```
 
-## Workflow To Minimize Typing Strain
+### Workflow To Minimize Typing Strain
 
 ![Screen recording of optimal DX in action: using this package with Prettier as it neatly arranges each class name on a new line](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/Reduce%20typing%20strain.gif)
 
@@ -106,7 +119,7 @@ export const mergeClassNames = (...args) => {
 };
 ```
 
-## Argument Handling
+### Argument Handling
 
 `mergeClassNames` accepts multiple arguments but filters out `null`, `undefined`, and empty strings (`""`). Remaining values are either strings or are _implicitly converted_ to strings by the JavaScript engine, then joined with spaces to produce the final class name string.
 
@@ -118,4 +131,4 @@ If you are considering this package for production, you might also want to look 
 
 This project is licensed under the AGPL-3.0 License. See `LICENSE.txt` for full details.
 
-## Enjoy 😉
+Enjoy 😉
