@@ -7,13 +7,16 @@ A straightforward utility for merging CSS class names in `React + Tailwind` and 
 -   [Installation](#installation)
     -   [Install Prettier With VSCode (Most Recommended)](#install-prettier-with-vscode-most-recommended)
 -   [Usage](#usage)
+
     -   [Workflow To Minimize Typing Strain](#workflow-to-minimize-typing-strain)
+
+-   [Argument Handling](#argument-handling)
+    -   [Breaking Changes From Version 1.X.X](#breaking-changes-from-version-1xx)
+-   [Testing](#testing)
+-   [Source Code](#source-code)
 -   [Why the Mismatch Between Exported Function and Package Name?](#why-the-mismatch-between-exported-function-and-package-name)
 -   [Where This Package Excels](#where-this-package-excels)
--   [Source Code](#source-code)
-    -   [Argument Handling](#argument-handling)
-        -   [Changes From Version 1.X.X](#changes-from-version-1xx)
--   [Testing](#testing)
+
 -   [Production Considerations](#production-considerations)
 -   [License](#license)
 
@@ -90,15 +93,29 @@ function MyComponent() {
     -   Replaces single quotes with double quotes.
     -   Neatly arranges each class name on a new line.
 
-## Why the Mismatch Between Exported Function and Package Name?
+## Argument Handling
 
-I wanted to name the package as `mergeClassNames` to reflect the single exported function, but the NPM Package Registry does not allow capital letters, only lower case and dash characters.
+`mergeClassNames` only accepts **_non-empty string values_**, everything else like empty strings (`""`), `null`, `undefined`, numbers, objects and arrays is _ignored_. This ensures stricter and predictable output.
 
-In addition there was already a package named `merge-class-names` but it is no longer maintained (and the developer recommends `clsx` instead).
+### Breaking Changes From Version 1.X.X
 
-## Where This Package Excels
+In pervious versions, arguments that were not strings were implicitly converted to strings by the JavaScript engine.
 
-While similar packages exist (`clsx`) with better features and potentially improved performance, `simple-merge-class-names` focuses on being very straightforward and easy to reason about, as defined in its source code.
+## Testing
+
+This project uses `Vitest` as the test runner for fast, modern testing.
+
+#### Run All Testing Once
+
+```bash
+pnpm test
+```
+
+#### Run Tests In Watch Mode
+
+```bash
+pnpm test:watch
+```
 
 ## Source Code
 
@@ -126,29 +143,15 @@ export const mergeClassNames = (...args) => {
 };
 ```
 
-### Argument Handling
+## Why the Mismatch Between Exported Function and Package Name?
 
-`mergeClassNames` only accepts **_non-empty string values_**, everything else like empty strings (`""`), `null`, `undefined`, numbers, objects and arrays is _ignored_. This ensures stricter and predictable output.
+I wanted to name the package as `mergeClassNames` to reflect the single exported function, but the NPM Package Registry does not allow capital letters, only lower case and dash characters.
 
-#### Breaking Changes From Version 1.X.X
+In addition there was already a package named `merge-class-names` but it is no longer maintained (and the developer recommends `clsx` instead).
 
-In pervious versions, arguments that were not strings were implicitly converted to strings by the JavaScript engine.
+## Where This Package Excels
 
-### Testing
-
-This project uses `Vitest` as the test runner for fast, modern testing.
-
-#### Run All Testing Once
-
-```bash
-pnpm test
-```
-
-#### Run Tests In Watch Mode
-
-```bash
-pnpm test:watch
-```
+While similar packages exist (`clsx`) with better features and potentially improved performance, `simple-merge-class-names` focuses on being very straightforward and easy to reason about, as defined in its source code.
 
 ## Production Considerations
 
@@ -157,5 +160,7 @@ If you are considering this package for production, you might also want to look 
 ## License
 
 This project is licensed under the AGPL-3.0 License. See `LICENSE.txt` for full details.
+
+---
 
 Enjoy 😉
