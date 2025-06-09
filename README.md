@@ -14,8 +14,10 @@ A straightforward utility for merging CSS class names in `React + Tailwind` and 
     -   [Breaking Changes From Version 1.X.X](#breaking-changes-from-version-1xx)
 -   [Testing](#testing)
 -   [Source Code](#source-code)
--   [Why the Mismatch Between Exported Function and Package Name?](#why-the-mismatch-between-exported-function-and-package-name)
--   [Where This Package Excels](#where-this-package-excels)
+-   [Misc.](#misc)
+
+    -   [Why the Mismatch Between Exported Function and Package Name?](#why-the-mismatch-between-exported-function-and-package-name)
+    -   [Where This Package Excels](#where-this-package-excels)
 
 -   [Production Considerations](#production-considerations)
 -   [License](#license)
@@ -143,19 +145,21 @@ export const mergeClassNames = (...args) => {
 };
 ```
 
-## Why the Mismatch Between Exported Function and Package Name?
+## Misc.
+
+### Why the Mismatch Between Exported Function and Package Name?
 
 I wanted to name the package as `mergeClassNames` to reflect the single exported function, but the NPM Package Registry does not allow capital letters, only lower case and dash characters.
 
 In addition there was already a package named `merge-class-names` but it is no longer maintained (and the developer recommends `clsx` instead).
 
-## Where This Package Excels
+### Where This Package Excels
 
 While similar packages exist (`clsx`) with better features and potentially improved performance, `simple-merge-class-names` focuses on being very straightforward and easy to reason about, as defined in its source code.
 
 ## Production Considerations
 
-If you are considering this package for production, you might also want to look into `clsx` for more advanced features: [https://www.npmjs.com/package/clsx](https://www.npmjs.com/package/clsx)
+If you are considering this package for production, you might also want to look into `clsx`: [https://www.npmjs.com/package/clsx](https://www.npmjs.com/package/clsx)
 
 ## License
 
