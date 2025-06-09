@@ -46,7 +46,7 @@ function MyComponent() {
 }
 ```
 
-While using separate strings for each class name can be tedious (see [Workflow to Minimize Typing Strain](#workflow-to-minimize-typing-strain)), it however significantly enhances Code Readability and Developer Experience (DX). This is in contrast to hard-to-read strings like:
+While using separate strings for each class name can be tedious (see [Workflow To Minimize Typing Strain](#workflow-to-minimize-typing-strain)), it however significantly enhances Code Readability and Developer Experience (DX). This is in contrast to hard-to-read strings like:
 
 ```jsx
 function MyComponent() {
