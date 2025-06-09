@@ -1,24 +1,30 @@
 # simple-merge-class-names
 
-A straightforward utility for merging CSS class names in `React`, `Tailwind` and other JavaScript projects.
+A straightforward utility for merging CSS class names in `React + Tailwind` and other JavaScript projects.
 
 ## Installation
 
 ```bash
 pnpm add simple-merge-class-names
-# or
+```
+
+```bash
 yarn add simple-merge-class-names
-# or
+```
+
+```bash
 npm install simple-merge-class-names
 ```
 
-## Install Prettier with VSCode (Recommended)
+## Install `Prettier` with VSCode (Most Recommended)
 
-For optimal developer experience, install Prettier for VS Code: [https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode), or an equivalent auto code formatter for your IDE.
+Install Prettier for VS Code for most optimal developer experience: [https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+
+Or install an equivalent auto code formatter for your IDE.
 
 ## Usage
 
-The single function provided by this package is `mergeClassNames(...args)`.
+`mergeClassNames(...args)` is the single exported function from this package package.
 
 ```jsx
 import { mergeClassNames } from "simple-merge-class-names";
@@ -40,24 +46,37 @@ function MyComponent() {
 }
 ```
 
-Using individual strings for each class name can be tedious, however it significantly enhances code readability and Developer Experience (DX). This is in contrast to hard-to-read strings like `className="app min-h-dvh grid grid-rows-[auto_1fr_auto] outline"`.
+Using individual strings for each class name can be tedious (see [Workflow to minimize typing strain](#workflow-to-minimize-typing-strain)), however it significantly enhances code readability and Developer Experience (DX). This is in contrast to hard-to-read strings like:
 
-## To minimize typing strain:
+```jsx
+function MyComponent() {
+    return (
+        <div className="app min-h-dvh grid grid-rows-[auto_1fr_auto] outline">
+            Hello, world!
+        </div>
+    );
+}
+```
+
+## Workflow to minimize typing strain:
 
 ![Screen recording of optimal DX in action: using this package with Prettier as it neatly arranges each class name on a new line](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/Reduce%20typing%20strain.gif)
 
--   Use single quotes for class names, often a single key press on many keyboards.
--   Save the file (e.g., with `Ctrl+S`), and Prettier does the rest; it automatically:
+-   Have `Prettier` installed
+-   Use single quotes (<kbd>'</kbd>) for class names, often a single key press on many keyboards.
+-   Save the file (<kbd>Ctrl+S</kbd>), and Prettier does the formatting heavy-lifting, it automatically:
     -   Replaces single quotes with double quotes.
     -   Neatly arranges each class name on a new line.
 
-## Why the mismatch between Function, and Package name?
+## Why the mismatch between exported Function, and Package name?
 
-Although I wanted to name the package as `mergeClassNames` to reflect the single exported function, the NPM Package Registry does not allow capital letters, only lower case and dash characters. In addition there was already a package named merge-class-names but it is no longer maintained.
+I wanted to name the package as `mergeClassNames` to reflect the single exported function, but the NPM Package Registry does not allow capital letters, only lower case and dash characters.
 
-## Where this Package excels
+In addition there was already a package named `merge-class-names` but it is no longer maintained (and the developer recommends `clsx` instead).
 
-While similar packages exist (see `clsx`) with often better features and potentially improved performance, `simple-merge-class-names` focuses on being very straightforward and easy to reason about, as defined in its source code.
+## Where this package excels
+
+While similar packages exist (`clsx`) with better features and potentially improved performance, `simple-merge-class-names` focuses on being very straightforward and easy to reason about, as defined in its source code.
 
 ## Source Code
 
@@ -98,6 +117,12 @@ export const mergeClassNames = (...args) => {
 };
 ```
 
+## Argument Handling
+
+`mergeClassNames` accepts multiple arguments but filters out `null`, `undefined`, and empty strings (`""`), and the remaining values are either strings or are _implicitly converted_ to strings by the JavaScript engine.
+
+Finally the end string values are merged and separated by spaces.
+
 ## Production Considerations
 
 If you are considering this package for production, you might also want to look into `clsx` for more advanced features: [https://www.npmjs.com/package/clsx](https://www.npmjs.com/package/clsx)
@@ -105,3 +130,5 @@ If you are considering this package for production, you might also want to look 
 ## License
 
 This project is licensed under the AGPL-3.0 License. See `LICENSE.txt` for full details.
+
+## Enjoy 😉
