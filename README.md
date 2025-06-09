@@ -12,6 +12,7 @@ A straightforward utility for merging CSS class names in `React + Tailwind` and 
 -   [Where This Package Excels](#where-this-package-excels)
 -   [Source Code](#source-code)
     -   [Argument Handling](#argument-handling)
+-   [Testing](#testing)
 -   [Production Considerations](#production-considerations)
 -   [License](#license)
 
@@ -122,6 +123,22 @@ export const mergeClassNames = (...args) => {
 ### Argument Handling
 
 `mergeClassNames` accepts multiple arguments but filters out `null`, `undefined`, and empty strings (`""`). Remaining values are either strings or are _implicitly converted_ to strings by the JavaScript engine, then joined with spaces to produce the final class name string.
+
+### Testing
+
+This project uses `Vitest` as the test runner for fast, modern testing.
+
+#### Run All Testing Once
+
+```bash
+pnpm test
+```
+
+#### Run Tests In Watch Mode
+
+```bash
+pnpm test:watch
+```
 
 ## Production Considerations
 

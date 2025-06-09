@@ -4,8 +4,16 @@
     "description": "Example usage: <div className = {mergeClassNames('flex', 'flex-col')}/>",
     "main": "mergeClassNames.js",
     "exports": "./mergeClassNames.js",
+    "files": [
+        "package.json",
+        "mergeClassNames.js",
+        "LICENSE.txt",
+        "README.md"
+    ],
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "vitest",
+        "test:watch": "vitest --watch",
+        "test:ui": "vitest --ui"
     },
     "keywords": [
         "merge",
@@ -23,5 +31,8 @@
     "bugs": {
         "url": "https://github.com/new-AF/simple-merge-class-names/issues"
     },
-    "homepage": "https://github.com/new-AF/simple-merge-class-names"
+    "homepage": "https://github.com/new-AF/simple-merge-class-names",
+    "devDependencies": {
+        "vitest": "^3.2.3"
+    }
 }
