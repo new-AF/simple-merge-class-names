@@ -1,10 +1,27 @@
 /**
- * mergeClassNames - a utility to merge CSS class names I developed for use in my `React` + `Tailwind` projects. Use it in conjunction with an auto-formatting tool like `Prettier`
- *
- * Example usage: <div className = {mergeClassNames("flex", "flex-col")}/>
+ * mergeClassNames - A straightforward utility for merging CSS class names in React + Tailwind, and other JavaScript projects.
  *
  * @license AGPL-3.0
  * Copyright (C) 2025 Abdullah Fatota
+ *
+ * Example usage:
+ * import { mergeClassNames } from "simple-merge-class-names";
+ *
+ * function MyComponent() {
+ *   return (
+ *     <div
+ *       className={mergeClassNames(
+ *         "app",
+ *         "min-h-dvh",
+ *         "grid",
+ *         "grid-rows-[auto_1fr_auto]",
+ *         "outline"
+ *       )}
+ *     >
+ *       Hello, world!
+ *     </div>
+ *   );
+ * }
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
