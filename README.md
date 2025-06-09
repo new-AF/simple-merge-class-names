@@ -16,15 +16,15 @@ yarn add simple-merge-class-names
 npm install simple-merge-class-names
 ```
 
-## Install `Prettier` with VSCode (Most Recommended)
+## Install `Prettier` With VSCode (Most Recommended)
 
-Install Prettier for VS Code for most optimal developer experience: [https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+[https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
 Or install an equivalent auto code formatter for your IDE.
 
 ## Usage
 
-`mergeClassNames(...args)` is the single exported function provided by the package.
+Import `mergeClassNames(...args)` from the package, and use it in your JSX or JavaScript code.
 
 ```jsx
 import { mergeClassNames } from "simple-merge-class-names";
@@ -46,7 +46,7 @@ function MyComponent() {
 }
 ```
 
-Using individual strings for each class name can be tedious (see [Workflow to minimize typing strain](#workflow-to-minimize-typing-strain)), however it significantly enhances code readability and Developer Experience (DX). This is in contrast to hard-to-read strings like:
+While using separate strings for each class name can be tedious (see [Workflow to Minimize Typing Strain](#workflow-to-minimize-typing-strain)), it however significantly enhances Code Readability and Developer Experience (DX). This is in contrast to hard-to-read strings like:
 
 ```jsx
 function MyComponent() {
@@ -58,7 +58,7 @@ function MyComponent() {
 }
 ```
 
-## Workflow to minimize typing strain:
+## Workflow To Minimize Typing Strain
 
 ![Screen recording of optimal DX in action: using this package with Prettier as it neatly arranges each class name on a new line](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/Reduce%20typing%20strain.gif)
 
@@ -68,13 +68,13 @@ function MyComponent() {
     -   Replaces single quotes with double quotes.
     -   Neatly arranges each class name on a new line.
 
-## Why the mismatch between exported Function, and Package name?
+## Why the Mismatch Between Exported Function and Package Name?
 
 I wanted to name the package as `mergeClassNames` to reflect the single exported function, but the NPM Package Registry does not allow capital letters, only lower case and dash characters.
 
 In addition there was already a package named `merge-class-names` but it is no longer maintained (and the developer recommends `clsx` instead).
 
-## Where this package excels
+## Where This Package Excels
 
 While similar packages exist (`clsx`) with better features and potentially improved performance, `simple-merge-class-names` focuses on being very straightforward and easy to reason about, as defined in its source code.
 
@@ -119,9 +119,7 @@ export const mergeClassNames = (...args) => {
 
 ## Argument Handling
 
-`mergeClassNames` accepts multiple arguments but filters out `null`, `undefined`, and empty strings (`""`), and the remaining values are either strings or are _implicitly converted_ to strings by the JavaScript engine.
-
-Finally the end string values are merged and separated by spaces.
+`mergeClassNames` accepts multiple arguments but filters out `null`, `undefined`, and empty strings (`""`). Remaining values are either strings or are _implicitly converted_ to strings by the JavaScript engine, then joined with spaces to produce the final class name string.
 
 ## Production Considerations
 
