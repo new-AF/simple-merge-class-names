@@ -63,6 +63,13 @@ function MyComponent() {
 ![Screen recording of optimal DX in action: using this package with Prettier as it neatly arranges each class name on a new line](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/Reduce%20typing%20strain.gif)
 
 -   Have `Prettier` installed
+-   Have `Editor: Word Wrap` enabled in VS Code:
+
+    -   `Open Settings (UI)` → `Editor: Word Wrap` → `on`
+    -   Or `Open User Settings (JSON)` and add this entry:
+
+        `"editor.wordWrap": "on"`
+
 -   Use single quotes (<kbd>'</kbd>) for class names, often a single key press on many keyboards.
 -   Save the file (<kbd>Ctrl+S</kbd>), and Prettier does the formatting heavy-lifting, it automatically:
     -   Replaces single quotes with double quotes.
