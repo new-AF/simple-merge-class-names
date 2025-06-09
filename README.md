@@ -24,7 +24,7 @@ Or install an equivalent auto code formatter for your IDE.
 
 ## Usage
 
-`mergeClassNames(...args)` is the single exported function from this package package.
+`mergeClassNames(...args)` is the single exported function provided by the package.
 
 ```jsx
 import { mergeClassNames } from "simple-merge-class-names";
