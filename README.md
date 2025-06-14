@@ -17,7 +17,7 @@ A straightforward utility for merging CSS class names in `React + Tailwind` and 
     -   [Console Warning for Invalid Arguments](#console-warning-for-invalid-arguments)
 
 -   [Testing](#testing)
--   [Source Code](#source-code)
+-   [Source Code (Partial)](#source-code-partial)
 -   [Misc.](#misc)
 
     -   [Why the Mismatch Between Exported Function and Package Name?](#why-the-mismatch-between-exported-function-and-package-name)
@@ -135,7 +135,7 @@ pnpm test
 pnpm test:watch
 ```
 
-## Source Code
+## Source Code (Partial)
 
 ```javascript
 /**
