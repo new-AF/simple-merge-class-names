@@ -37,6 +37,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+const isValueFalse = (val) => val === false;
+
 const isTypeString = (val) => typeof val === "string";
 
 const isNonEmptyString = (val) => val !== "";
@@ -53,7 +55,9 @@ const partition = (array, keepPredicate) => {
 export const mergeClassNames = (...args) => {
     const space = "\x20"; // ASCII code for a single space character (" "), decimal 32
 
-    const [strings, nonStrings] = partition(args, isTypeString);
+    const [_, nonFalseValues] = partition(args, isValueFalse); // ignore all false values used for conditional class inclusion
+
+    const [strings, nonStrings] = partition(nonFalseValues, isTypeString);
 
     const trimmed = strings.map((val) => val.trim());
 
@@ -67,16 +71,22 @@ export const mergeClassNames = (...args) => {
     /* Don't silently ignore invalid input, explicitly disclose them as it may indicate a bigger problem */
     const warn = [];
 
-    /* "Expected all arguments to be strings ..." */
+    /* "Expected all arguments to be either ..." */
     if (nonStrings.length > 0) {
         const join = ", ";
         const count = nonStrings.length;
+        const maxPrint = 10;
         const formatGotArray = (element, index) =>
             `(${index + 1}/${count}): (${element}) of type "${typeof element}"`;
-        const message = nonStrings.map(formatGotArray).join(join);
+        const message = (
+            count > maxPrint ? nonStrings.slice(0, maxPrint) : nonStrings
+        )
+            .map(formatGotArray)
+            .join(join);
+        const suffix = count > maxPrint ? ", ... ]" : "]";
 
         warn.push(
-            `Expected all arguments to be strings, but got ${count} non-string values: [${message}].`
+            `Expected all arguments to be either strings or value "false", but got ${count} invalid values: [${message}${suffix}.`
         );
     }
 

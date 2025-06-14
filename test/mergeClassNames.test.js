@@ -3,8 +3,10 @@ import { mergeClassNames } from "../mergeClassNames";
 
 const cases = [
     { input: [], expected: "" },
-    { input: [null, undefined, ""], expected: "" },
+    { input: [false], expected: "" },
+    { input: [null, undefined, ""], expected: "" }, // these will console.warn
     { input: ["app"], expected: "app" },
+    { input: ["app", false], expected: "app" },
     {
         input: [
             "app",
@@ -14,11 +16,12 @@ const cases = [
             "",
             "min-h-dvh",
             "grid",
+            true,
             null,
             "grid-rows-[auto_1fr_auto]",
             "outline",
             "",
-        ],
+        ], // this one too
         expected: "app min-h-dvh grid grid-rows-[auto_1fr_auto] outline",
     },
 ];

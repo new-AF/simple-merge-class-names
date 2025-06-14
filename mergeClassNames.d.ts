@@ -1,1 +1,1 @@
-export declare const mergeClassNames: (...args: string[]) => string;
+export declare const mergeClassNames: (...args: (string | boolean)[]) => string;
