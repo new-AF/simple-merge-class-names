@@ -81,7 +81,7 @@ export const mergeClassNames = (...args) => {
     }
 
     /* "Expected 0 empty strings ..." */
-    if (nonEmptyStrings.length > 0) {
+    if (emptyStrings.length > 0) {
         const count = emptyStrings.length;
         warn.push(`Expected 0 empty strings, but got ${count}.`);
     }
