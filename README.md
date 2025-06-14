@@ -145,20 +145,34 @@ pnpm test:watch
 
 const isTypeString = (val) => typeof val === "string";
 
-const isNotEmptyString = (val) => val !== "";
+const isNonEmptyString = (val) => val !== "";
+
+const partition = (array, keepPredicate) => {
+    const keep = [];
+    const ignore = [];
+    for (const element of array) {
+        (keepPredicate(element) ? keep : ignore).push(element);
+    }
+    return [keep, ignore];
+};
 
 export const mergeClassNames = (...args) => {
-    const space = "\x20"; // " "; ASCII code for single space character;
+    const space = "\x20"; // ASCII code for a single space character (" "), decimal 32
 
-    const stringsOnly = args.filter((val) => isTypeString(val));
+    const [strings, nonStrings] = partition(args, isTypeString);
 
-    const trimmed = stringsOnly.map((val) => val.trim());
+    const trimmed = strings.map((val) => val.trim());
 
-    const nonEmpty = trimmed.filter((val) => isNotEmptyString(val));
+    const [nonEmptyStrings, emptyStrings] = partition(
+        trimmed,
+        isNonEmptyString
+    );
 
-    const className = nonEmpty.join(space);
-    return className;
-};
+    const className = nonEmptyStrings.join(space);
+
+    /* Don't silently ignore invalid input, explicitly disclose them as it indicate a bigger problem */
+    const warn = [];
+    /* ... */
 ```
 
 ## Misc.
