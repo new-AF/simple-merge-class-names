@@ -4,6 +4,7 @@ import { mergeClassNames } from "../mergeClassNames";
 const cases = [
     { input: [], expected: "" },
     { input: [null, undefined, ""], expected: "" },
+    { input: ["app"], expected: "app" },
     {
         input: [
             "app",

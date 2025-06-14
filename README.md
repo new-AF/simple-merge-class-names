@@ -11,7 +11,11 @@ A straightforward utility for merging CSS class names in `React + Tailwind` and 
     -   [Workflow To Minimize Typing Strain](#workflow-to-minimize-typing-strain)
 
 -   [Argument Handling](#argument-handling)
+
     -   [Breaking Changes From Version 1.X.X](#breaking-changes-from-version-1xx)
+
+    -   [Console Warning for Invalid Arguments](#console-warning-for-invalid-arguments)
+
 -   [Testing](#testing)
 -   [Source Code](#source-code)
 -   [Misc.](#misc)
@@ -102,6 +106,18 @@ function MyComponent() {
 ### Breaking Changes From Version 1.X.X
 
 In pervious versions, arguments that were not strings were implicitly converted to strings by the JavaScript engine.
+
+### Console Warning for Invalid Arguments
+
+Invalid arguments are not silently ignored, as they may indicate a deeper issue. A single warning is logged to the developer console whenever these arguments are passed and ignored.
+
+Example output:
+
+```plaintext
+[mergeClassNames] Warning: invalid arguments were provided and were ignored:
+    - Expected all arguments to be strings, but got 4 non-string values: [(1/4): (undefined) of type "undefined", (2/4): (test) of type "object", (3/4): ([object Object]) of type "object", (4/4): (null) of type "object"].
+    - Expected 0 empty strings, but got 2.
+```
 
 ## Testing
 

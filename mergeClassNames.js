@@ -39,17 +39,65 @@
 
 const isTypeString = (val) => typeof val === "string";
 
-const isNotEmptyString = (val) => val !== "";
+const isNonEmptyString = (val) => val !== "";
+
+const partition = (array, keepPredicate) => {
+    const keep = [];
+    const ignore = [];
+    for (const element of array) {
+        (keepPredicate(element) ? keep : ignore).push(element);
+    }
+    return [keep, ignore];
+};
 
 export const mergeClassNames = (...args) => {
-    const space = "\x20"; // " "; ASCII code for single space character;
+    const space = "\x20"; // ASCII code for a single space character (" "), decimal 32
 
-    const stringsOnly = args.filter((val) => isTypeString(val));
+    const [strings, nonStrings] = partition(args, isTypeString);
 
-    const trimmed = stringsOnly.map((val) => val.trim());
+    const trimmed = strings.map((val) => val.trim());
 
-    const nonEmpty = trimmed.filter((val) => isNotEmptyString(val));
+    const [nonEmptyStrings, emptyStrings] = partition(
+        trimmed,
+        isNonEmptyString
+    );
 
-    const className = nonEmpty.join(space);
+    const className = nonEmptyStrings.join(space);
+
+    /* Don't silently ignore invalid input, explicitly disclose them as it indicate a bigger problem */
+    const warn = [];
+
+    /* "Expected all arguments to be strings ..." */
+    if (nonStrings.length > 0) {
+        const join = ", ";
+        const count = nonStrings.length;
+        const formatGotArray = (element, index) =>
+            `(${index + 1}/${count}): (${element}) of type "${typeof element}"`;
+        const message = nonStrings.map(formatGotArray).join(join);
+
+        warn.push(
+            `Expected all arguments to be strings, but got ${count} non-string values: [${message}].`
+        );
+    }
+
+    /* "Expected 0 empty strings ..." */
+    if (nonEmptyStrings.length > 0) {
+        const count = emptyStrings.length;
+        warn.push(`Expected 0 empty strings, but got ${count}.`);
+    }
+
+    /* Full Warn Message */
+    if (warn.length > 0) {
+        const newline = "\n";
+        const prefix = "\t" + "- ";
+        const message = warn.map((text) => `${prefix}${text}`).join(newline);
+
+        console.warn(
+            "[mergeClassNames] Warning: invalid arguments were provided and were ignored:",
+            newline,
+            message
+        );
+    }
+
     return className;
 };
