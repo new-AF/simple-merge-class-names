@@ -1,6 +1,6 @@
 {
     "name": "simple-merge-class-names",
-    "version": "3.0.3",
+    "version": "3.0.4",
     "description": "A straightforward utility for merging CSS class names in React + Tailwind and JavaScript projects.",
     "exports": {
         ".": {
