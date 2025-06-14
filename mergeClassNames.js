@@ -64,7 +64,7 @@ export const mergeClassNames = (...args) => {
 
     const className = nonEmptyStrings.join(space);
 
-    /* Don't silently ignore invalid input, explicitly disclose them as it indicate a bigger problem */
+    /* Don't silently ignore invalid input, explicitly disclose them as it may indicate a bigger problem */
     const warn = [];
 
     /* "Expected all arguments to be strings ..." */
