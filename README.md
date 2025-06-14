@@ -8,13 +8,15 @@ A straightforward utility for merging CSS class names in `React + Tailwind` and 
     -   [Install Prettier With VSCode (Most Recommended)](#install-prettier-with-vscode-most-recommended)
 -   [Usage](#usage)
 
+    -   [Conditionally Include Class Names](#conditionally-include-class-names)
+
     -   [Workflow To Minimize Typing Strain](#workflow-to-minimize-typing-strain)
 
 -   [Argument Handling](#argument-handling)
 
-    -   [Breaking Changes From Version 1.X.X](#breaking-changes-from-version-1xx)
-
     -   [Console Warning for Invalid Arguments](#console-warning-for-invalid-arguments)
+
+    -   [Breaking Changes From Version 1.X.X](#breaking-changes-from-version-1xx)
 
 -   [Testing](#testing)
 -   [Source Code (Partial)](#source-code-partial)
@@ -58,7 +60,7 @@ function MyComponent() {
         <div
             className={mergeClassNames(
                 "app",
-                "min-h-dvh",
+                condition ? "min-h-dvh" : false,
                 "grid",
                 "grid-rows-[auto_1fr_auto]",
                 "outline"
@@ -82,6 +84,22 @@ function MyComponent() {
 }
 ```
 
+### Conditionally Include Class Names
+
+To conditionally include a class, use the ternary operator like this: `condition ? 'class-name' : false` to maintain clear and warning-free code.
+
+```jsx
+mergeClassNames(
+    "app",
+    condition ? "min-h-dvh" : false,
+    "grid",
+    "grid-rows-[auto_1fr_auto]",
+    "outline"
+);
+```
+
+**Important**: Avoid using the short-circuit implicit syntax `condition && "class-name"` because it can produce falsy values like `0`, `""`, `undefined`, `null`, which will cause warnings to be logged.
+
 ### Workflow To Minimize Typing Strain
 
 ![Screen recording of optimal DX in action: using this package with Prettier as it neatly arranges each class name on a new line](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/Reduce%20typing%20strain.gif)
@@ -101,11 +119,13 @@ function MyComponent() {
 
 ## Argument Handling
 
-`mergeClassNames` only accepts **_non-empty string values_**, everything else like empty strings (`""`), `null`, `undefined`, numbers, objects and arrays is _ignored_. This ensures stricter and predictable output.
+`mergeClassNames(...args)` accepts only the following arguments:
 
-### Breaking Changes From Version 1.X.X
+-   **Non-empty strings** (for example: `"app"`, `"min-h-dvh"`)
 
-In pervious versions, arguments that were not strings were implicitly converted to strings by the JavaScript engine.
+-   The boolean value **`false`**
+
+Everything else like empty strings (`""`), `null`, `undefined`, numbers, objects and arrays is _ignored_ and logged via `console.warn` to alert the user of a potentially deeper issue.
 
 ### Console Warning for Invalid Arguments
 
@@ -118,6 +138,10 @@ Example output:
     - Expected all arguments to be strings, but got 4 non-string values: [(1/4): (undefined) of type "undefined", (2/4): (test) of type "object", (3/4): ([object Object]) of type "object", (4/4): (null) of type "object"].
     - Expected 0 empty strings, but got 2.
 ```
+
+### Breaking Changes From Version 1.X.X
+
+In pervious versions, arguments that were not strings were implicitly converted to strings by the JavaScript engine.
 
 ## Testing
 
