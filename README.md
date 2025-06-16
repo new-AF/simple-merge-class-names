@@ -27,7 +27,7 @@ A straightforward utility for merging CSS class names in `React + Tailwind` and 
 ## Support Palestine
 
 We Stand with Palestine <img 
-    src="https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/ps.png" 
+    src="https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/ps.svg" 
     alt="Flag of Palestine"
     height="10"
 />
