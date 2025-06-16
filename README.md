@@ -4,6 +4,7 @@ A straightforward utility for merging CSS class names in `React + Tailwind` and 
 
 ## Table of Contents
 
+-   [Support Palestine](#support-palestine)
 -   [Production Considerations](#production-considerations)
 -   [Installation](#installation)
     -   [Install Prettier With VSCode (Most Recommended)](#install-prettier-with-vscode-most-recommended)
@@ -22,6 +23,20 @@ A straightforward utility for merging CSS class names in `React + Tailwind` and 
     -   [Why the Mismatch Between Exported Function and Package Name?](#why-the-mismatch-between-exported-function-and-package-name)
     -   [Where This Package Excels](#where-this-package-excels)
 -   [License](#license)
+
+## Support Palestine
+
+We Stand with Palestine <img 
+  src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEyMDAiIGhlaWdodD0iNjAwIiB2aWV3Qm94PSIwIDAgNiAzIj48cmVjdCBmaWxsPSIjMDA5NjM5IiB3aWR0aD0iNiIgaGVpZ2h0PSIzIi8+PHJlY3QgZmlsbD0iI0ZGRiIgd2lkdGg9IjYiIGhlaWdodD0iMiIvPjxyZWN0IHdpZHRoPSI2IiBoZWlnaHQ9IjEiLz48cGF0aCBmaWxsPSIjRUQyRTM4IiBkPSJNMCwwbDIsMS41TDAsM1oiLz48L3N2Zz4=" 
+  alt="Flag of Palestine" 
+  style="height: 0.6rem;"
+/>
+
+[Donate](https://gazafunds.com/)
+
+[Boycott Brands Supporting Genocide](https://www.uplift.ie/bds/)
+
+[Legal Action](https://www.hindrajabfoundation.org/perpetrators)
 
 ## Production Considerations
 
