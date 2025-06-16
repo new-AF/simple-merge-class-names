@@ -80,7 +80,7 @@ const MyComponent = () => {
 };
 ```
 
-Or for debugging purposes to fix [console warnings](#console-warning):
+Or for [debugging purposes to fix console warnings](#using-mergeclassnamesdebugger-and-the-built-in-browser-debugger-to-find-and-fix-warnings):
 
 -   Open the _Browser's Developer Tools_ and
 -   Use `mergeClassNamesDebugger`
