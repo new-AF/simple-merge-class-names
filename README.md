@@ -4,7 +4,7 @@ A straightforward utility for merging CSS class names in `React + Tailwind` and 
 
 ## Table of Contents
 
--   [Support Palestine](#support-palestine)
+-   [We Stand with Palestine](#we-stand-with-palestine)
 -   [Production Considerations](#production-considerations)
 -   [Installation](#installation)
     -   [Install Prettier With VSCode (Most Recommended)](#install-prettier-with-vscode-most-recommended)
@@ -24,15 +24,13 @@ A straightforward utility for merging CSS class names in `React + Tailwind` and 
     -   [Where This Package Excels](#where-this-package-excels)
 -   [License](#license)
 
-## Support Palestine
+## We Stand with Palestine <img src="https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/ps.svg" alt="Flag of Palestine" height="11" />
 
-We Stand with Palestine <img src="https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/ps.svg" alt="Flag of Palestine" height="10" />
+-   [Donate](https://gazafunds.com/)
 
-[Donate](https://gazafunds.com/)
+-   [Boycott Brands Supporting Genocide](https://www.uplift.ie/bds/)
 
-[Boycott Brands Supporting Genocide](https://www.uplift.ie/bds/)
-
-[Legal Action](https://www.hindrajabfoundation.org/perpetrators)
+-   [Legal Action](https://www.hindrajabfoundation.org/perpetrators)
 
 ## Production Considerations
 
