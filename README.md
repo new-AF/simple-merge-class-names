@@ -226,6 +226,26 @@ const MyComponent = () => {
 
 ## Using `mergeClassNamesDebugger` And The Built-in Browser Debugger To Find And Fix Warnings
 
+```jsx
+import { mergeClassNamesDebugger } from "simple-merge-class-names";
+
+const MyComponent = () => {
+    return (
+        <div
+            className={mergeClassNamesDebugger(
+                "app",
+                condition ? "min-h-dvh" : false,
+                "grid",
+                "grid-rows-[auto_1fr_auto]",
+                "outline"
+            )}
+        >
+            Hello, world!
+        </div>
+    );
+};
+```
+
 `mergeClassNamesDebugger` is a drop-in replacement for `mergeClassNames` but with the added _benefit_ that it will activate the built-in **_debugger_** inside browsers like _FireFox_, _Chrome_, _Safari_ and even _VS Code_ if configured properly.
 
 This built-in JavaScript feature gained wide-spread support from major browsers around 2012, so you are getting this feature for free with minimal effort, all you have to do are 2 things:
