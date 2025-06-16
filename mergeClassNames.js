@@ -41,7 +41,10 @@ const isValueFalse = (val) => val === false;
 
 const isTypeString = (val) => typeof val === "string";
 
-const isNonEmptyString = (val) => val !== "";
+export const isEmptyString = (val) => {
+    const trimmed = val.trim();
+    return trimmed === "";
+};
 
 const partition = (array, keepPredicate) => {
     const keep = [];
@@ -52,62 +55,135 @@ const partition = (array, keepPredicate) => {
     return [keep, ignore];
 };
 
-export const mergeClassNames = (...args) => {
-    const space = "\x20"; // ASCII code for a single space character (" "), decimal 32
+const warnInvalidArguments = ({
+    nonStrings,
+    emptyStrings,
+    activateDebugger = false,
+}) => {
+    const hasInvalidTypes = nonStrings.length > 0;
+    const hasEmptyStrings = emptyStrings.length > 0;
+    const doPrint = hasInvalidTypes || hasEmptyStrings;
 
-    const [_, nonFalseValues] = partition(args, isValueFalse); // ignore all false values used for conditional class inclusion
+    if (doPrint === false) return;
 
-    const [strings, nonStrings] = partition(nonFalseValues, isTypeString);
+    const messages = [];
+    const newline = "\n";
+    const doubleNewline = newline.repeat(2);
 
-    const trimmed = strings.map((val) => val.trim());
+    const tabString = (string, tabCount = 0) => {
+        const tab = "\t".repeat(tabCount);
+        return `${tab}${string}`;
+    };
 
-    const [nonEmptyStrings, emptyStrings] = partition(
-        trimmed,
-        isNonEmptyString
-    );
+    const tabArray = (array, tabCount) =>
+        array.map((element) => tabString(element, tabCount));
 
-    const className = nonEmptyStrings.join(space);
+    /* convert array to nice string because console.warn(array) squashes it on 1 line */
+    const makeMessage = ({
+        array,
+        expected,
+        tabCount = 1,
+        includeElementType = false,
+        arrayMaxLength = 5,
+    }) => {
+        const count = array.length;
+        const addEllipsis = count > arrayMaxLength;
+        const slice = addEllipsis ? array.slice(0, arrayMaxLength) : array;
 
-    /* Don't silently ignore invalid input, explicitly disclose them as it may indicate a bigger problem */
-    const warn = [];
+        const formatElementWithType = (element, index) =>
+            `(${index + 1}/${count}): >${element}< of type "${typeof element}"`;
+
+        const formatElement = (element, index) =>
+            `(${index + 1}/${count}): >${element}<`;
+
+        const initialMapped = slice.map(
+            includeElementType ? formatElementWithType : formatElement
+        );
+
+        const mapped = addEllipsis ? [...initialMapped, "..."] : initialMapped;
+
+        const string = [
+            tabString(
+                `${expected}, but got ${count} invalid value(s):`,
+                tabCount
+            ),
+            tabString("[", tabCount),
+            tabArray(mapped, tabCount).join("," + newline),
+            tabString("]", tabCount),
+        ].join(newline);
+
+        return string;
+    };
+
+    /* "Replace "mergeClassNames" with "mergeClassNamesDebugger" ... " */
+    if (doPrint && activateDebugger === false) {
+        messages.push(
+            tabString(
+                '* Replace "mergeClassNames" with "mergeClassNamesDebugger" without changing any arguments, and open the Developer Console, or attach Debugger (see README.md).',
+                1
+            )
+        );
+    }
 
     /* "Expected all arguments to be either ..." */
-    if (nonStrings.length > 0) {
-        const join = ", ";
-        const count = nonStrings.length;
-        const maxPrint = 10;
-        const formatGotArray = (element, index) =>
-            `(${index + 1}/${count}): (${element}) of type "${typeof element}"`;
-        const message = (
-            count > maxPrint ? nonStrings.slice(0, maxPrint) : nonStrings
-        )
-            .map(formatGotArray)
-            .join(join);
-        const suffix = count > maxPrint ? ", ... ]" : "]";
-
-        warn.push(
-            `Expected all arguments to be either strings or value "false", but got ${count} invalid values: [${message}${suffix}.`
+    if (hasInvalidTypes) {
+        if (activateDebugger) {
+            debugger;
+        }
+        messages.push(
+            makeMessage({
+                array: nonStrings,
+                expected:
+                    "* Expected all arguments to be either strings or value `false`",
+                includeElementType: true,
+            })
         );
     }
 
     /* "Expected 0 empty strings ..." */
-    if (emptyStrings.length > 0) {
-        const count = emptyStrings.length;
-        warn.push(`Expected 0 empty strings, but got ${count}.`);
-    }
-
-    /* Full Warn Message */
-    if (warn.length > 0) {
-        const newline = "\n";
-        const prefix = "\t" + "- ";
-        const message = warn.map((text) => `${prefix}${text}`).join(newline);
-
-        console.warn(
-            "[mergeClassNames] Warning: invalid arguments were provided and were ignored:",
-            newline,
-            message
+    if (hasEmptyStrings) {
+        if (activateDebugger) {
+            debugger;
+        }
+        messages.push(
+            makeMessage({
+                array: emptyStrings,
+                expected: "* Expected 0 empty strings",
+            })
         );
     }
 
+    /* Full Warn makeMessage */
+    const functionName =
+        activateDebugger === false
+            ? "mergeClassNames"
+            : "mergeClassNamesDebugger";
+
+    const string = [
+        `[${functionName}] Warning: invalid arguments were provided and ignored:`,
+        ...messages,
+    ].join(doubleNewline);
+
+    console.warn(string);
+};
+
+const mergeClassNamesCore = ({ args, activateDebugger }) => {
+    const space = "\x20"; // ASCII code for a single space character (" "), decimal 32
+
+    const [_, nonFalseValues] = partition(args, isValueFalse); // ignore all false values used for conditional class inclusion
+    const [strings, nonStrings] = partition(nonFalseValues, isTypeString);
+    const [emptyStrings, nonEmptyStrings] = partition(strings, isEmptyString);
+    const trimmed = nonEmptyStrings.map((val) => val.trim());
+    const className = trimmed.join(space);
+
+    /* Don't silently ignore invalid input, explicitly disclose them as it may indicate a bigger problem */
+    warnInvalidArguments({ nonStrings, emptyStrings, activateDebugger });
+
     return className;
 };
+
+export const mergeClassNames = (...args) =>
+    mergeClassNamesCore({ args, activateDebugger: false });
+
+export const mergeClassNamesDebugger = (...args) =>
+    mergeClassNamesCore({ args, activateDebugger: true });

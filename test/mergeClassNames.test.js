@@ -1,32 +1,53 @@
 import { test, expect } from "vitest";
-import { mergeClassNames } from "../mergeClassNames";
+import {
+    mergeClassNames,
+    mergeClassNamesDebugger,
+    isEmptyString,
+} from "../mergeClassNames";
 
-const cases = [
+const classNameCases = [
     { input: [], expected: "" },
     { input: [false], expected: "" },
     { input: [null, undefined, ""], expected: "" }, // these will console.warn
     { input: ["app"], expected: "app" },
-    { input: ["app", false], expected: "app" },
+    { input: [" app  ", false], expected: "app" },
     {
         input: [
-            "app",
+            "  app ",
             undefined,
-            ["test"],
+            [" test "],
             { key: "value" },
             "",
             "min-h-dvh",
-            "grid",
+            "grid   ",
             true,
             null,
             "grid-rows-[auto_1fr_auto]",
             "outline",
-            "",
+            "   ",
         ], // this one too
         expected: "app min-h-dvh grid grid-rows-[auto_1fr_auto] outline",
     },
 ];
 
-cases.forEach(({ input, expected }) => {
+const emptyStringCases = [
+    { input: "", expected: true },
+    { input: "  ", expected: true },
+    { input: "\t  ", expected: true },
+    { input: "\t  \n", expected: true },
+    {
+        input: `
+`,
+        expected: true,
+    },
+    {
+        input: `
+   `,
+        expected: true,
+    },
+];
+
+classNameCases.forEach(({ input, expected }) => {
     const stringifiedArray = JSON.stringify(input).slice(1, -1);
 
     const displayString = `Input: mergeClassNames(${stringifiedArray})
@@ -34,5 +55,25 @@ cases.forEach(({ input, expected }) => {
 
     test(displayString, () => {
         expect(mergeClassNames(...input)).toBe(expected);
+    });
+});
+
+classNameCases.forEach(({ input, expected }) => {
+    const stringifiedArray = JSON.stringify(input).slice(1, -1);
+
+    const displayString = `Input: mergeClassNamesDebugger(${stringifiedArray})
+        Expected output: '${expected}'`;
+
+    test(displayString, () => {
+        expect(mergeClassNamesDebugger(...input)).toBe(expected);
+    });
+});
+
+emptyStringCases.forEach(({ input, expected }) => {
+    const displayString = `Input: isEmptyString(>${input}<)
+        Expected output: ${expected}`;
+
+    test(displayString, () => {
+        expect(isEmptyString(input)).toBe(expected);
     });
 });
