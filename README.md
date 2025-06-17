@@ -141,10 +141,6 @@ mergeClassNames: (...args: (string | false)[]) => string;
 mergeClassNamesDebugger: (...args: (string | false)[]) => string;
 ```
 
-```jsx
-isEmptyString: (argument: string) => boolean;
-```
-
 For both `mergeClassNames` and `mergeClassNamesDebugger` they always return a string.
 
 -   If no inputs were provided e.g. `mergeClassNames()` or were invalid `mergeClassNames(undefined, " ")` then an _empty string_ is returned `""`
@@ -272,34 +268,6 @@ const MyComponent = () => {
             className={mergeClassNames(
                 "app",
                 condition ? "min-h-dvh" : false,
-                "grid",
-                "grid-rows-[auto_1fr_auto]",
-                "outline"
-            )}
-        >
-            Hello, world!
-        </div>
-    );
-};
-```
-
--   If chaining the result of another `mergeClassNames` then use `isEmptyString` to check if the result is not the _empty string_ (`""`):
-
-```jsx
-import { mergeClassNames, isEmptyString } from "simple-merge-class-names";
-
-const MyComponent = ({ condition, resultOfAnotherMergeClassNames }) => {
-    return (
-        <div
-            className={mergeClassNames(
-                "app",
-
-                condition ? "min-h-dvh" : false,
-
-                isEmptyString(resultOfAnotherMergeClassNames)
-                    ? false
-                    : resultOfAnotherMergeClassNames,
-
                 "grid",
                 "grid-rows-[auto_1fr_auto]",
                 "outline"

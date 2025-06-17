@@ -41,7 +41,7 @@ const isValueFalse = (val) => val === false;
 
 const isTypeString = (val) => typeof val === "string";
 
-export const isEmptyString = (val) => {
+const isEmptyString = (val) => {
     const trimmed = val.trim();
     return trimmed === "";
 };
