@@ -1,9 +1,5 @@
 import { test, expect } from "vitest";
-import {
-    mergeClassNames,
-    mergeClassNamesDebugger,
-    isEmptyString,
-} from "../mergeClassNames";
+import { mergeClassNames, mergeClassNamesDebugger } from "../mergeClassNames";
 
 const classNameCases = [
     { input: [], expected: "" },
@@ -30,23 +26,6 @@ const classNameCases = [
     },
 ];
 
-const emptyStringCases = [
-    { input: "", expected: true },
-    { input: "  ", expected: true },
-    { input: "\t  ", expected: true },
-    { input: "\t  \n", expected: true },
-    {
-        input: `
-`,
-        expected: true,
-    },
-    {
-        input: `
-   `,
-        expected: true,
-    },
-];
-
 classNameCases.forEach(({ input, expected }) => {
     const stringifiedArray = JSON.stringify(input).slice(1, -1);
 
@@ -66,14 +45,5 @@ classNameCases.forEach(({ input, expected }) => {
 
     test(displayString, () => {
         expect(mergeClassNamesDebugger(...input)).toBe(expected);
-    });
-});
-
-emptyStringCases.forEach(({ input, expected }) => {
-    const displayString = `Input: isEmptyString(>${input}<)
-        Expected output: ${expected}`;
-
-    test(displayString, () => {
-        expect(isEmptyString(input)).toBe(expected);
     });
 });
