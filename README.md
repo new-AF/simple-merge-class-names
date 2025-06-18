@@ -1,6 +1,6 @@
 # simple-merge-class-names
 
-A straightforward utility for merging CSS class names in _React & Tailwind_ and other _JavaScript_ projects.
+A straightforward utility for merging CSS class names in `React + Tailwind` and other _JavaScript_ projects.
 
 ## Table of Contents
 
@@ -34,7 +34,7 @@ A straightforward utility for merging CSS class names in _React & Tailwind_ and 
 
 ## Production Considerations
 
-When developing this package I prioritized _code readability_, _strict input handling_, and _improved developer experience_, as such **_performance_** and **_features_** were not the guiding factor. Therefore if you are considering this package for production, you might also want to look into `clsx`: [https://www.npmjs.com/package/clsx](https://www.npmjs.com/package/clsx)
+In developing this package, I prioritized _code readability_, _strict input handling_, and _enhanced developer experience_. Consequently, **performance** and **_features_** were not the primary focus. If you are considering this package for production, you may also want to explore `clsx`: [https://www.npmjs.com/package/clsx](https://www.npmjs.com/package/clsx).
 
 ## Installation
 
@@ -141,31 +141,31 @@ mergeClassNames: (...args: (string | false)[]) => string;
 mergeClassNamesDebugger: (...args: (string | false)[]) => string;
 ```
 
-For both `mergeClassNames` and `mergeClassNamesDebugger` they always return a string.
+Both `mergeClassNames` and `mergeClassNamesDebugger` always return a string.
 
--   If no inputs were provided e.g. `mergeClassNames()` or were invalid `mergeClassNames(undefined, " ")` then an _empty string_ is returned `""`
+-   If no inputs are provided (e.g. `mergeClassNames()`) or if invalid inputs are given (e.g. `mergeClassNames(undefined, " ")`), an _empty string_ is returned: `""`.
 
-## Accepted Arguments
+## Acceptable Arguments
 
 `mergeClassNames(...args)` and `mergeClassNamesDebugger(...args)` only accept the following arguments:
 
--   **Strings that are not empty, and are not whitespace** (for example: `"app"`, `"min-h-dvh"`, `"   grid   "`)
+-   **Strings that are not empty, and are not whitespace** (e.g. `"app"`, `"min-h-dvh"`, `"   grid   "`)
 
 -   The boolean value **`false`**
 
-Everything else is an _invalid argument_ that will be _ignored_, and cause a _warning_ to be logged, these argument types include:
+Any other input is considered an invalid argument and will be ignored, resulting in a matching warning being logged. Invalid argument types include:
 
--   _empty strings_ (`""`),
--   _whitespace combinations_ (e.g. `"\n"`, `"  \n\t "`, etc...),
+-   _Empty strings_ (`""`),
+-   _Whitespace combinations_ (e.g. `"   "`, `"\n"`, `"  \n\t "`, etc...),,
 -   `null`,
 -   `undefined`,
--   _numbers_,
--   _objects_,
--   _arrays_
+-   _Numbers_,
+-   _Objects_,
+-   _Arrays_
 
 ## Console Warning
 
-Whenever invalid arguments are passed to `mergeClassNames` they are _not silently ignored_ because this can cause a lot of subtle bugs in the future and compound technical debt. Therefore a `console.warn` is printed in the _Developer Console_ to alert of the potentially deeper issue that requires rectifying. Example:
+Whenever invalid arguments are passed to `mergeClassNames`, they are not silently ignored, as this can lead to subtle bugs and increase technical debt. Instead, a `console.warn` is shown in the _Developer Console_ to notify the developer of a potentially deeper issue that requires attention. For example:
 
 ```plaintext
 [mergeClassNames] Warning: invalid arguments were provided and ignored:
@@ -190,15 +190,15 @@ Whenever invalid arguments are passed to `mergeClassNames` they are _not silentl
 
 ## Conditionally Include Class Names
 
-To conditionally include a class name, use the
+To conditionally include a class name, use the _conditional operator_ as follows:
 
--   _Conditional operator_ `condition ? "class-name" : false` with `false` as the fallback value to maintain a clear and warning-free code.
+-   `condition ? "class-name" : false`, with `false` serving as the fallback value to ensure clear and warning-free code.
 
-This is because `false` will never cause the function to print a warning.
+This approach is effective because `false` will never result in a warning from the function.
 
-**Important**: Avoid using the
+**Important**: Avoid using the _short-circuit implicit syntax_ like this:
 
--   _Short-circuit implicit syntax_ `condition && "class-name"` because it can produce falsy values like `0`, `""`, `undefined`, `null`, which will cause warnings to be logged.
+-   `condition && "class-name"`, as it can produce falsy values such as `0`, `""`, `undefined`, and `null`, which will lead to warnings being logged.
 
 ```jsx
 import { mergeClassNames } from "simple-merge-class-names";
@@ -244,14 +244,14 @@ const MyComponent = () => {
 
 `mergeClassNamesDebugger` is a drop-in replacement for `mergeClassNames` but with the added _benefit_ that it will activate the built-in **_debugger_** inside browsers like _FireFox_, _Chrome_, _Safari_ and even _VS Code_ if configured properly.
 
-This built-in JavaScript feature gained wide-spread support from major browsers around 2012, so you are getting this feature for free with minimal effort, all you have to do are 2 things:
+This built-in JavaScript feature gained wide-spread support from major browsers around 2012, allowing you to access it with minimal effort. To utilize it, simply follow these two steps:
 
-1.  Simply **_Open the Browser's Developer Tools_**, this tells the JavaScript engine that the Debugger is _enabled_.
-2.  **_Replace_** `mergeClassNames` with **`mergeClassNamesDebugger`** _without_ changing any of the argument provided.
+1. **_Open the Browser's Developer Tools_** to inform the JavaScript engine that the debugger is _enabled_.
+2. **_Replace_** `mergeClassNames` with **`mergeClassNamesDebugger`** _without_ altering any of the provided arguments.
 
-_When the Debugger is enabled (i.e. *Browser's Developer Tools* is open) and an invalid argument like `undefined` or `" "` is passed to `mergeClassNamesDebugger`, then the JavaScript engine will automatically pause execution and highlight the invalid argument. You simply have to select the offending component (`Container.jsx` in this case) from the Call Stack._
+_When the debugger is enabled (i.e. *Browser's Developer Tools* is open) and an invalid argument such as `undefined` or `" "` is passed to `mergeClassNamesDebugger`, the JavaScript engine will automatically pause execution and highlight the invalid argument. You simply need to select the offending component (e.g. `Container.jsx`) from the Call Stack._
 
-When the Debugger is active, it should look like this screenshot (in _FireFox_):
+When the debugger is active, it will appear as shown in this screenshot (in _Firefox_):
 
 ![Firefox Debugger automatically paused execution when undefined was passed to mergeClassNamesDebugger](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/debugger.png)
 
@@ -336,9 +336,9 @@ export const mergeClassNamesDebugger = (...args) =>
 
 ### Motivation
 
-This package aims to improve code readability and developer experience in `React & Tailwind` projects by enforcing strict input handling. It logs warnings for invalid arguments, helping developers catch and fix underlying issues _early_.
+This package aims to improve code readability and developer experience in _React & Tailwind_ projects by enforcing strict input handling. It logs warnings for invalid arguments, helping developers catch and fix underlying issues _early_.
 
-In addition while writing class names as separate strings may seem tedious, the [workflow](#workflow-to-minimize-typing-strain) reduces friction and the overall process results in more readable and maintainable code than using single long strings:
+While writing class names as separate strings may seem tedious, the [workflow](#workflow-to-minimize-typing-strain) reduces friction and the overall process results in more readable and maintainable code in contrast to using single long strings:
 
 ```jsx
 const MyComponent = () => {
