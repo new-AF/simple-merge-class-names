@@ -1,6 +1,6 @@
 # simple-merge-class-names
 
-A straightforward utility for merging CSS class names in `React + Tailwind` and other _JavaScript_ projects.
+A straightforward utility for merging CSS class names in _React & Tailwind_ and other _JavaScript_ projects.
 
 ## Table of Contents
 
