@@ -36,7 +36,7 @@ For Production look into [https://www.npmjs.com/package/clsx](https://www.npmjs.
 
 -   [Legal Action](https://www.hindrajabfoundation.org/perpetrators)
 
-_Palestine is fundamental non-negotiable human rights. End all financial and diplomatic ties with i\*rael_.
+_Palestine is about fundamental non-negotiable human rights. End all financial and diplomatic ties with i\*rael_.
 
 ## Installation
 
@@ -170,7 +170,7 @@ mergeClassNames(
 );
 ```
 
-![screenshot of console.warn warnings because invalid arguments were provided and ignored, so no silent failing](.github/images/warnings.PNG)
+![screenshot of console.warn warnings because invalid arguments were provided and ignored, so no silent failing](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/warnings.PNG)
 
 ### Reason for warnings
 
@@ -234,7 +234,7 @@ mergeClassNames(condition ? "disabled" : mergeClassNames(...) )
     - _For Firefox:_ Open **_Developer Tools_:**
         - _Make Sure_ **_Debugger_** _(tab)_ -> **`Pause on debugger statement`** is ticked.
         - Keep Dev Tools open.
-          ![screenshot of Firefox Debugger section with Pause on debugger statement ticked on](.github/images/debugger-enabled.png)
+          ![screenshot of Firefox Debugger section with Pause on debugger statement ticked on](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/debugger-enabled.png)
 
 -   Use **`import {mergeClassNamesDebugger as mergeClassNames}`** to debug the entire file, and keep the rest intact.
 
@@ -285,10 +285,10 @@ mergeClassNames(condition ? "disabled" : mergeClassNames(...) )
     -   Navigate to the **_Call stack_**
     -   Click the function/component right before _`mergeClassNamesDebugger`_
 
-    ![screenshot of Firefox debugger active because of `undefined` invalid class name argument](.github/images/debugger-active.png)
+    ![screenshot of Firefox debugger active because of `undefined` invalid class name argument](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/debugger-active.png)
 
 -   Hover over the arguments, one or several should be invalid:
-    ![screenshot of Firefox debugger active because of `undefined` invalid class name argument](.github/images/debugger-3.png)
+    ![screenshot of Firefox debugger active because of `undefined` invalid class name argument](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/debugger-3.png)
 
 ## VSCode Workflow To Minimize Typing Strain
 
