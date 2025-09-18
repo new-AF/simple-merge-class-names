@@ -170,7 +170,7 @@ mergeClassNames(
 );
 ```
 
-![screenshot of console.warn warnings because invalid arguments were provided and ignored, so no silent failing](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/warnings.PNG)
+![screenshot of console.warn warnings because invalid arguments were provided and ignored, so no silent failing](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/console-warnings.png)
 
 ### Reason for warnings
 
@@ -234,7 +234,7 @@ mergeClassNames(condition ? "disabled" : mergeClassNames(...) )
     - _For Firefox:_ Open **_Developer Tools_:**
         - _Make Sure_ **_Debugger_** _(tab)_ -> **`Pause on debugger statement`** is ticked.
         - Keep Dev Tools open.
-          ![screenshot of Firefox Debugger section with Pause on debugger statement ticked on](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/debugger-enabled.png)
+          ![screenshot of Firefox Debugger section with Pause on debugger statement ticked on](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/debugger-check.png)
 
 -   Use **`import {mergeClassNamesDebugger as mergeClassNames}`** to debug the entire file, and keep the rest intact.
 
