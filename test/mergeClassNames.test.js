@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { mergeClassNames, mergeClassNamesDebugger } from "../mergeClassNames2";
+import { mergeClassNames, mergeClassNamesDebugger } from "../mergeClassNames";
 
 const classNameCases = [
     { input: [], expected: false },

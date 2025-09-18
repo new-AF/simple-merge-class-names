@@ -41,9 +41,8 @@ const partition = (array, keepPredicate) => {
     const keep = [];
     const ignore = [];
     for (const element of array) {
-        const response = keepPredicate(element);
-        const arrayRef = response.valid ? keep : ignore;
-        arrayRef.push(response);
+        const arrayRef = keepPredicate(element) ? keep : ignore;
+        arrayRef.push(element);
     }
     return [keep, ignore];
 };
@@ -51,44 +50,64 @@ const partition = (array, keepPredicate) => {
 const filterArguments = (argumentsArray) => {
     /* 
     returns {
-        value,
         valid: bool,
-        isString: bool,
-        (optional) isValidString
-        (optional) valueType
+        value: any
+        (optional) isString: bool,
+        (optional) valueType: any
+        (optional) isValueFalse
+        (optional) isValidString: bool
     }
     */
     const isValidArgument = (value) => {
         const valueType = typeof value;
 
-        if (valueType !== "string") {
-            return { valid: false, value, isString: false, valueType };
+        if (value === false) {
+            return { valid: true, value };
         }
 
-        const trimmed = value.trim();
+        if (valueType === "string") {
+            const trimmed = value.trim();
 
-        if (trimmed === "") {
+            // invalid string
+            if (trimmed === "") {
+                return {
+                    valid: false,
+                    value,
+                    isString: true,
+                    isValidString: false,
+                };
+            }
+            // valid string
             return {
-                valid: false,
-                value,
+                valid: true,
+                value: trimmed,
                 isString: true,
-                isValidString: false,
+                isValidString: true,
             };
         }
 
-        // valid string
-        return {
-            valid: true,
-            value: trimmed,
-            isString: true,
-            isValidString: true,
-        };
+        // everything else
+        return { valid: false, value, isString: false, valueType };
     };
 
-    const [validArguments, invalidArguments] = partition(
-        argumentsArray,
-        isValidArgument
+    // array of objects
+    const newArguments = argumentsArray.map((element) =>
+        isValidArgument(element)
     );
+
+    // includes `false`
+    const [validArgumentsWithFalse, invalidArguments] = partition(
+        newArguments,
+        ({ valid }) => valid === true
+    );
+
+    // ignore `false`
+    const [validArguments, _] = partition(
+        validArgumentsWithFalse,
+        ({ value }) => value !== false
+    );
+
+    // console.log({ validArgumentsWithFalse, validArguments, invalidArguments });
 
     return { validArguments, invalidArguments };
 };
@@ -130,12 +149,12 @@ const finalResult = (joinedClassNames) =>
     joinedClassNames === "" ? false : joinedClassNames;
 
 // exported
-export const mergeClassNamesNoWarning = (...argumentsArray) => {
-    const { validArguments, _ } = filterArguments(argumentsArray);
-    const classNames = join(validArguments);
-    const result = finalResult(classNames);
-    return result;
-};
+// export const mergeClassNamesNoWarning = (...argumentsArray) => {
+//     const { validArguments, _ } = filterArguments(argumentsArray);
+//     const classNames = join(validArguments);
+//     const result = finalResult(classNames);
+//     return result;
+// };
 
 export const mergeClassNames = (...argumentsArray) => {
     const { validArguments, invalidArguments } =
