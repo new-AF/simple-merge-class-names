@@ -37,148 +37,120 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-const isValueFalse = (val) => val === false;
-
-const isTypeString = (val) => typeof val === "string";
-
-const isEmptyString = (val) => {
-    const trimmed = val.trim();
-    return trimmed === "";
-};
-
 const partition = (array, keepPredicate) => {
     const keep = [];
     const ignore = [];
     for (const element of array) {
-        (keepPredicate(element) ? keep : ignore).push(element);
+        const response = keepPredicate(element);
+        const arrayRef = response.valid ? keep : ignore;
+        arrayRef.push(response);
     }
     return [keep, ignore];
 };
 
-const warnInvalidArguments = ({
-    nonStrings,
-    emptyStrings,
-    activateDebugger = false,
-}) => {
-    const hasInvalidTypes = nonStrings.length > 0;
-    const hasEmptyStrings = emptyStrings.length > 0;
-    const doPrint = hasInvalidTypes || hasEmptyStrings;
+const filterArguments = (argumentsArray) => {
+    /* 
+    returns {
+        value,
+        valid: bool,
+        isString: bool,
+        (optional) isValidString
+        (optional) valueType
+    }
+    */
+    const isValidArgument = (value) => {
+        const valueType = typeof value;
 
-    if (doPrint === false) return;
+        if (valueType !== "string") {
+            return { valid: false, value, isString: false, valueType };
+        }
 
-    const messages = [];
-    const newline = "\n";
-    const doubleNewline = newline.repeat(2);
+        const trimmed = value.trim();
 
-    const tabString = (string, tabCount = 0) => {
-        return string;
+        if (trimmed === "") {
+            return {
+                valid: false,
+                value,
+                isString: true,
+                isValidString: false,
+            };
+        }
+
+        // valid string
+        return {
+            valid: true,
+            value: trimmed,
+            isString: true,
+            isValidString: true,
+        };
     };
 
-    const tabArray = (array, tabCount) =>
-        array.map((element) => tabString(element, tabCount));
+    const [validArguments, invalidArguments] = partition(
+        argumentsArray,
+        isValidArgument
+    );
 
-    /* convert array to nice string because console.warn(array) squashes it on 1 line */
-    const makeMessage = ({
-        array,
-        expected,
-        tabCount = 1,
-        includeElementType = false,
-        arrayMaxLength = 5, // only shows 5 entries
-    }) => {
-        const count = array.length;
-        const addEllipsis = count > arrayMaxLength;
-        const slice = addEllipsis ? array.slice(0, arrayMaxLength) : array;
-
-        const formatElementWithType = (element, index) =>
-            `(${index + 1}/${count}): >${element}< (type ${typeof element})`;
-
-        const formatElement = (element, index) =>
-            `(${index + 1}/${count}): >${element}<`;
-
-        const initialMapped = slice.map(
-            includeElementType ? formatElementWithType : formatElement
-        );
-
-        const mapped = addEllipsis ? [...initialMapped, "..."] : initialMapped;
-
-        const string = [
-            tabString(`${expected} ${count} invalid value(s):`, tabCount),
-            tabString("[", tabCount),
-            tabArray(mapped, tabCount).join("," + newline),
-            tabString("]", tabCount),
-        ].join(newline);
-
-        return string;
-    };
-
-    /* "Expected all arguments to be either ..." */
-    if (hasInvalidTypes) {
-        if (activateDebugger) {
-            debugger;
-        }
-        messages.push(
-            makeMessage({
-                array: nonStrings,
-                expected: "- Arguments of wrong type:",
-                includeElementType: true,
-            })
-        );
-    }
-
-    /* "Expected 0 empty strings ..." */
-    if (hasEmptyStrings) {
-        if (activateDebugger) {
-            debugger;
-        }
-        messages.push(
-            makeMessage({
-                array: emptyStrings,
-                expected: "* Expected 0 empty strings",
-            })
-        );
-    }
-
-    /* "Replace "mergeClassNames" with "mergeClassNamesDebugger" ... " */
-    if (doPrint && activateDebugger === false) {
-        messages.push(
-            tabString(
-                '* Replace "mergeClassNames" with "mergeClassNamesDebugger" without changing any arguments, and open the Developer Console, or attach Debugger (see README.md).',
-                1
-            )
-        );
-    }
-
-    /* Full Warn makeMessage */
-    const functionName =
-        activateDebugger === false
-            ? "mergeClassNames"
-            : "mergeClassNamesDebugger";
-
-    const string = [
-        `[${functionName}] Warning: These invalid arguments were ignored:`,
-        ...messages,
-    ].join(doubleNewline);
-
-    console.warn(string);
+    return { validArguments, invalidArguments };
 };
 
-const mergeClassNamesCore = ({ args, activateDebugger }) => {
-    const space = "\x20"; // ASCII code for a single space character (" "), decimal 32
-
-    const [_, nonFalseValues] = partition(args, isValueFalse); // ignore all false values used for conditional class inclusion
-    const [strings, nonStrings] = partition(nonFalseValues, isTypeString);
-    const [emptyStrings, nonEmptyStrings] = partition(strings, isEmptyString);
-    const trimmed = nonEmptyStrings.map((val) => val.trim());
-    const className = trimmed.join(space);
-
-    /* Don't silently ignore invalid input, explicitly disclose them as it may indicate a bigger problem */
-    warnInvalidArguments({ nonStrings, emptyStrings, activateDebugger });
-
-    return className;
+const warnMessage = (
+    { value, isString, valueType, isValidString },
+    callerFunctionName
+) => {
+    if (isString === false) {
+        return `[${callerFunctionName}] Ignored non-string >${value}< (${valueType})`;
+    } else if (isValidString === false) {
+        return `[${callerFunctionName}] Ignored empty string "${value}"`;
+    }
 };
 
-export const mergeClassNames = (...args) =>
-    mergeClassNamesCore({ args, activateDebugger: false });
+const warnOnly = (
+    invalidArgumentsArray,
+    callerFunctionName,
+    debuggerVariantName
+) =>
+    invalidArgumentsArray.forEach((obj) => {
+        const message = warnMessage(obj, callerFunctionName);
+        console.warn(`${message}`);
+    });
 
-export const mergeClassNamesDebugger = (...args) =>
-    mergeClassNamesCore({ args, activateDebugger: true });
+const warnDebug = (invalidArgumentsArray, callerFunctionName) =>
+    invalidArgumentsArray.forEach((obj) => {
+        console.warn(warnMessage(obj, callerFunctionName));
+        debugger;
+    });
+
+const join = (argumentsArray) => {
+    const space = "\x20"; // ASCII for single space (" "), decimal 32
+    const classNames = argumentsArray.map(({ value }) => value).join(space);
+    return classNames;
+};
+
+const finalResult = (joinedClassNames) =>
+    joinedClassNames === "" ? false : joinedClassNames;
+
+// exported
+export const mergeClassNamesNoWarning = (...argumentsArray) => {
+    const { validArguments, _ } = filterArguments(argumentsArray);
+    const classNames = join(validArguments);
+    const result = finalResult(classNames);
+    return result;
+};
+
+export const mergeClassNames = (...argumentsArray) => {
+    const { validArguments, invalidArguments } =
+        filterArguments(argumentsArray);
+    warnOnly(invalidArguments, "mergeClassNames", "mergeClassNamesDebugger");
+    const classNames = join(validArguments);
+    const result = finalResult(classNames);
+    return result;
+};
+
+export const mergeClassNamesDebugger = (...argumentsArray) => {
+    const { validArguments, invalidArguments } =
+        filterArguments(argumentsArray);
+    warnDebug(invalidArguments, "mergeClassNamesDebugger");
+    const classNames = join(validArguments);
+    const result = finalResult(classNames);
+    return result;
+};

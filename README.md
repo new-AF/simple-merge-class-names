@@ -36,7 +36,7 @@ For Production look into [https://www.npmjs.com/package/clsx](https://www.npmjs.
 
 -   [Legal Action](https://www.hindrajabfoundation.org/perpetrators)
 
-_This is the fundamental human rights case, not a political one_
+_This is fundamental human rights, not a political issue. End all financial and diplomatic ties with i\*rael_.
 
 ## Installation
 
@@ -62,10 +62,10 @@ _If you have a different IDE use an equivalent auto code formatter tool/extensio
 
 ## Usage
 
-| Import function name      | `console.warn`s on invalid arguments |
-| ------------------------- | ------------------------------------ |
-| `mergeClassNames`         | YES                                  |
-| `mergeClassNamesDebugger` | YES                                  |
+| Function                  | Prints console warnings | Activates debugger |
+| ------------------------- | ----------------------- | ------------------ |
+| `mergeClassNames`         | ✅                      | ❌                 |
+| `mergeClassNamesDebugger` | ✅                      | ✅                 |
 
 ```jsx
 import { mergeClassNames } from "simple-merge-class-names";
@@ -89,10 +89,10 @@ const Component = ({ condition }) => {
 
 ## Valid Arguments: Only 2
 
-1. **non-empty `string`**
+1. **Content strings, not whitespace, of length >= 1**
 2. **`false`**
 
-Example, This is OK:
+_Example, This is OK:_
 
 ```js
 mergeClassNames(
@@ -113,7 +113,7 @@ _As long as you have content in the string you're OK_
 
 ## Invalid Arguments
 
-_Everything else, including below will be **ignored**, **with** a `console.warn` to alert you:_
+All below arguments will be **ignored**, and a **warning** _(`console.warn`)_ will be printed to alert you:
 
 -   **Empty strings**: _(e.g. `""`)_
 -   **Whitespace** any consecutive combination of the following:
@@ -131,8 +131,10 @@ _Everything else, including below will be **ignored**, **with** a `console.warn`
 ```js
 // Example: These arguments will be **ignored**, and a console.warn will be printed
 
+const someVariable = "";
+
 mergeClassNames(
-    "", // empty string
+    someVariable, // empty string
     "   ", // whitespace
     "\n ", // whitespace
     "  \t  \n ", // whitespace
@@ -152,34 +154,64 @@ mergeClassNames(
 );
 ```
 
-You get these warnings in the dev console:
+![screenshot of console.warn warnings because invalid arguments were provided and ignored, so no silent failing](.github/images/warnings.PNG)
+
+## Reason for warnings
+
+-   To avoid silent failures, because you will be pulling your hair asking why a Tailwind class isn't working only to figure out you passed an _object_, _array_ or an _empty string_ instead of a valid string. _(It could also be because of an unsupported class name or typo but this is beyond the scope of this package)_
 
 ## Debugger Usage In Browser
 
-1. Ensure Debugger is enabled
-    - _e.g._ Firefox Menu -> Developer Tools -> Debugger _(tab)_ -> `Pause on debugger statement` _(should be ticked)_
+**Once you see warnings in the console, the next step is to use `mergeClassNamesDebugger`**
+
+1. Enable Browser Debugger
+    - _For chromium-based browsers it's On by default and you don't need to do anything AFAIK._
+    - _For Firefox:_ Menu -> Developer Tools -> Debugger _(tab)_ -> `Pause on debugger statement` _(should be ticked)_
       ![screenshot of Firefox Debugger section with Pause on debugger statement ticked on](.github/images/debugger-enabled.png)
-2. Use `mergeClassNamesDebugger(...args)` as before
 
-```jsx
-import { mergeClassNamesDebugger } from "simple-merge-class-names";
+-   Use **`import {mergeClassNamesDebugger as mergeClassNames}`** to debug the entire file.
 
-const Component = ({ condition }) => {
-    return (
-        <div
-            className={mergeClassNamesDebugger(
-                "app",
-                condition ? "min-h-dvh" : false,
-                "grid",
-                "grid-rows-[auto_1fr_auto]",
-                "outline"
-            )}
-        >
-            Hello, world!
-        </div>
-    );
-};
-```
+    ```jsx
+    import { mergeClassNamesDebugger as mergeClassNames } from "simple-merge-class-names";
+
+    const Component = ({ condition }) => {
+        return (
+            <div
+                className={mergeClassNames(
+                    "app",
+                    condition ? "min-h-dvh" : false,
+                    "grid",
+                    "grid-rows-[auto_1fr_auto]",
+                    "outline"
+                )}
+            >
+                Hello, world!
+            </div>
+        );
+    };
+    ```
+
+-   or import `mergeClassNamesDebugger` by iteself and use it manually.
+
+    ```jsx
+    import { mergeClassNamesDebugger } from "simple-merge-class-names";
+
+    const Component = ({ condition }) => {
+        return (
+            <div
+                className={mergeClassNamesDebugger(
+                    "app",
+                    condition ? "min-h-dvh" : false,
+                    "grid",
+                    "grid-rows-[auto_1fr_auto]",
+                    "outline"
+                )}
+            >
+                Hello, world!
+            </div>
+        );
+    };
+    ```
 
 ## Workflow To Minimize Typing Strain
 
