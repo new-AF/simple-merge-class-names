@@ -318,7 +318,6 @@ This project uses `Vitest` as the test runner for fast and modern testing.
 ```bash
 git clone https://github.com/new-AF/simple-merge-class-names
 cd simple-merge-class-names
-pnpm install
 pnpm test
 ```
 
