@@ -71,8 +71,7 @@ const warnInvalidArguments = ({
     const doubleNewline = newline.repeat(2);
 
     const tabString = (string, tabCount = 0) => {
-        const tab = "\t".repeat(tabCount);
-        return `${tab}${string}`;
+        return string;
     };
 
     const tabArray = (array, tabCount) =>
@@ -84,14 +83,14 @@ const warnInvalidArguments = ({
         expected,
         tabCount = 1,
         includeElementType = false,
-        arrayMaxLength = 5,
+        arrayMaxLength = 5, // only shows 5 entries
     }) => {
         const count = array.length;
         const addEllipsis = count > arrayMaxLength;
         const slice = addEllipsis ? array.slice(0, arrayMaxLength) : array;
 
         const formatElementWithType = (element, index) =>
-            `(${index + 1}/${count}): >${element}< of type "${typeof element}"`;
+            `(${index + 1}/${count}): >${element}< (type ${typeof element})`;
 
         const formatElement = (element, index) =>
             `(${index + 1}/${count}): >${element}<`;
@@ -103,10 +102,7 @@ const warnInvalidArguments = ({
         const mapped = addEllipsis ? [...initialMapped, "..."] : initialMapped;
 
         const string = [
-            tabString(
-                `${expected}, but got ${count} invalid value(s):`,
-                tabCount
-            ),
+            tabString(`${expected} ${count} invalid value(s):`, tabCount),
             tabString("[", tabCount),
             tabArray(mapped, tabCount).join("," + newline),
             tabString("]", tabCount),
@@ -114,16 +110,6 @@ const warnInvalidArguments = ({
 
         return string;
     };
-
-    /* "Replace "mergeClassNames" with "mergeClassNamesDebugger" ... " */
-    if (doPrint && activateDebugger === false) {
-        messages.push(
-            tabString(
-                '* Replace "mergeClassNames" with "mergeClassNamesDebugger" without changing any arguments, and open the Developer Console, or attach Debugger (see README.md).',
-                1
-            )
-        );
-    }
 
     /* "Expected all arguments to be either ..." */
     if (hasInvalidTypes) {
@@ -133,8 +119,7 @@ const warnInvalidArguments = ({
         messages.push(
             makeMessage({
                 array: nonStrings,
-                expected:
-                    "* Expected all arguments to be either strings or value `false`",
+                expected: "- Arguments of wrong type:",
                 includeElementType: true,
             })
         );
@@ -153,6 +138,16 @@ const warnInvalidArguments = ({
         );
     }
 
+    /* "Replace "mergeClassNames" with "mergeClassNamesDebugger" ... " */
+    if (doPrint && activateDebugger === false) {
+        messages.push(
+            tabString(
+                '* Replace "mergeClassNames" with "mergeClassNamesDebugger" without changing any arguments, and open the Developer Console, or attach Debugger (see README.md).',
+                1
+            )
+        );
+    }
+
     /* Full Warn makeMessage */
     const functionName =
         activateDebugger === false
@@ -160,7 +155,7 @@ const warnInvalidArguments = ({
             : "mergeClassNamesDebugger";
 
     const string = [
-        `[${functionName}] Warning: invalid arguments were provided and ignored:`,
+        `[${functionName}] Warning: These invalid arguments were ignored:`,
         ...messages,
     ].join(doubleNewline);
 

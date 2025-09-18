@@ -1,13 +1,15 @@
 # simple-merge-class-names
 
-A straightforward utility for merging CSS class names in _React & Tailwind_ and other _JavaScript_ projects.
+A straightforward utility for merging CSS class names in _React (JSX)_ and other _JavaScript_ projects.
+
+For Production look into [https://www.npmjs.com/package/clsx](https://www.npmjs.com/package/clsx)
 
 ## Table of Contents
 
--   [We Stand with Palestine](#we-stand-with-palestine)
--   [Production Considerations](#production-considerations)
+-   [Genocidal Israhel Is Starving Gaza]()
+-   [Production Considerations]()
 -   [Installation](#installation)
-    -   [Install Prettier With VSCode (Most Recommended)](#install-prettier-with-vscode-most-recommended)
+    -   [Recommended If Using VSCode: Install `Prettier` Extension]()
 -   [Usage](#usage)
 -   [Workflow To Minimize Typing Strain](#workflow-to-minimize-typing-strain)
 -   [Type Definitions (of Exported Functions)](#type-definitions-of-exported-functions)
@@ -24,17 +26,17 @@ A straightforward utility for merging CSS class names in _React & Tailwind_ and 
     -   [Where This Package Excels](#where-this-package-excels)
 -   [License](#license)
 
-## We Stand with Palestine <img src="https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/ps.svg" alt="Flag of Palestine" height="11" />
+## The Genocidal Occupation Is Starving Gaza <img src="https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/ps.svg" alt="Flag of Palestine" height="11" />
 
 -   [Donate](https://gazafunds.com/)
 
--   [Boycott Brands Supporting Genocide](https://www.uplift.ie/bds/)
+-   [(US) Demand Immediate Opening of ALL Gaza Border Crossings](https://act.uscpr.org/a/letaidin)
+
+-   [Boycott Brands Supporting Gaza Holocaust](https://www.uplift.ie/bds/)
 
 -   [Legal Action](https://www.hindrajabfoundation.org/perpetrators)
 
-## Production Considerations
-
-In developing this package, I prioritized _code readability_, _strict input handling_, and _enhanced developer experience_. Consequently, **performance** and **_features_** were not the primary focus. If you are considering this package for production, you may also want to explore `clsx`: [https://www.npmjs.com/package/clsx](https://www.npmjs.com/package/clsx).
+_This is the fundamental human rights case, not a political one_
 
 ## Installation
 
@@ -50,20 +52,25 @@ yarn add simple-merge-class-names
 npm install simple-merge-class-names
 ```
 
-### Install `Prettier` With VSCode (Most Recommended)
+### _Recommended If Using VSCode: Install `Prettier` Extension_
 
--   [https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+-   _[https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)_
 
--   Or use an equivalent auto code formatter for your IDE.
+_It will nicely format your code especially when you have lots of classes, and will significantly improve your visual experience._
+
+_If you have a different IDE use an equivalent auto code formatter tool/extension_
 
 ## Usage
 
-Import `mergeClassNames(...args)` from the package, and use it in your _JSX_ or _JavaScript_ code.
+| Import function name      | `console.warn`s on invalid arguments |
+| ------------------------- | ------------------------------------ |
+| `mergeClassNames`         | YES                                  |
+| `mergeClassNamesDebugger` | YES                                  |
 
 ```jsx
 import { mergeClassNames } from "simple-merge-class-names";
 
-const MyComponent = () => {
+const Component = ({ condition }) => {
     return (
         <div
             className={mergeClassNames(
@@ -80,15 +87,84 @@ const MyComponent = () => {
 };
 ```
 
-Or for [debugging purposes to fix console warnings](#using-mergeclassnamesdebugger-and-the-built-in-browser-debugger-to-find-and-fix-warnings):
+## Valid Arguments: Only 2
 
--   Open the _Browser's Developer Tools_ and
--   Use `mergeClassNamesDebugger`
+1. **non-empty `string`**
+2. **`false`**
+
+Example, This is OK:
+
+```js
+mergeClassNames(
+    "mx-auto",
+    "min-dvh    ",
+    "   flex",
+    "      grid      ",
+    "italic     font-bold   ",
+    `
+        gap-y-4
+    `,
+    false,
+    condition ? "daisy-btn-active" : false
+);
+```
+
+_As long as you have content in the string you're OK_
+
+## Invalid Arguments
+
+_Everything else, including below will be **ignored**, **with** a `console.warn` to alert you:_
+
+-   **Empty strings**: _(e.g. `""`)_
+-   **Whitespace** any consecutive combination of the following:
+    -   new lines,
+    -   spaces,
+    -   tabs
+-   **`true`**
+-   **`undefined`**
+-   **`null`**
+-   **Objects** _(e.g. `{name: 'value'}`)_
+-   **Numbers** _(e.g. `123`, `123.45`)_
+-   **Big Int** _(`123n`)_
+-   **Symbols** _(e.g. `Symbol('name')`)_
+
+```js
+// Example: These arguments will be **ignored**, and a console.warn will be printed
+
+mergeClassNames(
+    "", // empty string
+    "   ", // whitespace
+    "\n ", // whitespace
+    "  \t  \n ", // whitespace
+    `           // whitespace
+        \n
+    `,
+    true, // true
+    undefined, // undefined
+    null, // null
+    {
+        // object
+        name: "value",
+        email: "email@example.com",
+    },
+    123, // number
+    123.45 // number
+);
+```
+
+You get these warnings in the dev console:
+
+## Debugger Usage In Browser
+
+1. Ensure Debugger is enabled
+    - _e.g._ Firefox Menu -> Developer Tools -> Debugger _(tab)_ -> `Pause on debugger statement` _(should be ticked)_
+      ![screenshot of Firefox Debugger section with Pause on debugger statement ticked on](.github/images/debugger-enabled.png)
+2. Use `mergeClassNamesDebugger(...args)` as before
 
 ```jsx
 import { mergeClassNamesDebugger } from "simple-merge-class-names";
 
-const MyComponent = () => {
+const Component = ({ condition }) => {
     return (
         <div
             className={mergeClassNamesDebugger(
@@ -333,6 +409,12 @@ export const mergeClassNamesDebugger = (...args) =>
 ```
 
 ## Misc.
+
+## About
+
+You might want to look into `clsx`: [https://www.npmjs.com/package/clsx](https://www.npmjs.com/package/clsx) for performance or features.
+
+_I instead developed this package *(`simple-merge-class-names`)* to prioritize source code readability, strict input handling, and enhanced developer experience (DX)._
 
 ### Motivation
 

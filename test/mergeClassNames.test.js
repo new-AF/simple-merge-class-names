@@ -1,10 +1,10 @@
 import { test, expect } from "vitest";
-import { mergeClassNames, mergeClassNamesDebugger } from "../mergeClassNames";
+import { mergeClassNames, mergeClassNamesDebugger } from "../mergeClassNames2";
 
 const classNameCases = [
-    { input: [], expected: "" },
-    { input: [false], expected: "" },
-    { input: [null, undefined, ""], expected: "" }, // these will console.warn
+    { input: [], expected: false },
+    { input: [false], expected: false },
+    { input: [null, undefined, ""], expected: false }, // these will console.warn
     { input: ["app"], expected: "app" },
     { input: [" app  ", false], expected: "app" },
     {
