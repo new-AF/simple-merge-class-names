@@ -67,6 +67,8 @@ _If you have a different IDE use an equivalent auto code formatter tool/extensio
 | `mergeClassNames`         | ✅                      | ❌                 |
 | `mergeClassNamesDebugger` | ✅                      | ✅                 |
 
+_Example_:
+
 ```jsx
 import { mergeClassNames } from "simple-merge-class-names";
 
@@ -303,14 +305,9 @@ Use single quotes around class names, and activate `Prettier` which will neatly 
 -   Use single quotes (<kbd>'</kbd>) around class names
 -   Save the file
 
-Example:
+_Before and after:_
 
--   Before
-    ![Screenshot of code before Prettier neatly formats code](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/before.png)
-
--   After
-
-    ![Screenshot of code after Prettier neatly formats code](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/after.png)
+![Screenshot of code before Prettier neatly formats code](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/Reduce-typing-strain.gif)
 
 ## Testing Source Code
 

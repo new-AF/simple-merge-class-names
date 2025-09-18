@@ -21,12 +21,16 @@
         "test:ui": "vitest --ui"
     },
     "keywords": [
-        "mergeClassNames",
-        "merge",
+        "class-merger",
         "class-names-merger",
-        "utility",
+        "jsx",
+        "merge",
+        "mergeClassNames",
+        "mergeClassNamesDebugger",
+        "merger",
         "react",
-        "tailwindcss"
+        "tailwindcss",
+        "utility"
     ],
     "author": "Abdullah Fatota",
     "license": "AGPL-3.0",
