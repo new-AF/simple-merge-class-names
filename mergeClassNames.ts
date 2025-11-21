@@ -22,6 +22,19 @@
 // valid arguments: non-empty strings and `false`
 // invalid arguments: empty strings, anything that's not value `false`
 
+// to be exported
+
+const isTypeString = (value: unknown) => typeof value === "string";
+
+const isEmptyString = (value: unknown) =>
+    isTypeString(value) && value.length === 0;
+
+const isWhiteSpace = (value: unknown) =>
+    isTypeString(value) && value.trim().length === 0;
+
+export const isValidString = (value: unknown) =>
+    !isEmptyString(value) && !isWhiteSpace(value);
+
 type userInputArray = Array<string | false>;
 
 type coreArguments = {
@@ -35,7 +48,7 @@ const mergeClassNamesCore = ({ array, activateDebugger }: coreArguments) => {
 
     array.forEach(
         (element) => {
-            if (typeof element !== "string") {
+            if (!isTypeString(element)) {
                 console.warn(
                     `Ignored invalid argument: >${element}< (${typeof element})`
                 );
@@ -47,7 +60,7 @@ const mergeClassNamesCore = ({ array, activateDebugger }: coreArguments) => {
                 return;
             } // end not a string
 
-            if (element.length === 0) {
+            if (isEmptyString(element)) {
                 console.warn(`Ignored empty string: ""`);
 
                 if (activateDebugger) {
@@ -58,7 +71,7 @@ const mergeClassNamesCore = ({ array, activateDebugger }: coreArguments) => {
             } //  empty string
 
             const trimmed = element.trim();
-            if (trimmed.length < 1) {
+            if (isWhiteSpace(trimmed)) {
                 console.warn(`Ignored whitespace string: ${element}`);
 
                 if (activateDebugger) {

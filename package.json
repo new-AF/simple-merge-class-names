@@ -1,7 +1,7 @@
 {
     "name": "simple-merge-class-names",
     "version": "7.0.3",
-    "description": "A straightforward utility for merging CSS class names in React + Tailwind and JavaScript projects.",
+    "description": " A class names merger for TypeScript, JavaScript, TSX / JSX (React)",
     "exports": {
         ".": {
             "import": "./mergeClassNames.ts"
@@ -19,9 +19,8 @@
         "test:ui": "vitest --ui"
     },
     "keywords": [
+        "class-names-merger",
         "classes-merger",
-        "class-names-merger",
-        "class-names-merger",
         "jsx",
         "merge",
         "mergeClassNames",
@@ -29,6 +28,7 @@
         "merger",
         "react",
         "tailwindcss",
+        "tsx",
         "utility"
     ],
     "author": "Abdullah Fatota",
