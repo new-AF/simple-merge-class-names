@@ -1,5 +1,5 @@
 /**
- * mergeClassNames - A class names merger for JavaScript (and JSX / React).
+ * mergeClassNames - A class names merger for TypeScript, JavaScript, TSX / JSX (React).
  *
  * @license AGPL-3.0
  * Copyright (C) 2025 Abdullah Fatota
@@ -21,8 +21,16 @@
 
 // valid arguments: non-empty strings and `false`
 // invalid arguments: empty strings, anything that's not value `false`
-const mergeClassNamesCore = ({ array, activateDebugger }) => {
-    const kept = [];
+
+type userInputArray = Array<string | false>;
+
+type coreArguments = {
+    array: userInputArray;
+    activateDebugger: boolean;
+};
+
+const mergeClassNamesCore = ({ array, activateDebugger }: coreArguments) => {
+    const kept: string[] = [];
     const space = " ";
 
     array.forEach(
@@ -68,8 +76,8 @@ const mergeClassNamesCore = ({ array, activateDebugger }) => {
     return className;
 };
 
-export const mergeClassNames = (...array) =>
+export const mergeClassNames = (...array: userInputArray) =>
     mergeClassNamesCore({ array, activateDebugger: false });
 
-export const mergeClassNamesDebugger = (...array) =>
+export const mergeClassNamesDebugger = (...array: userInputArray) =>
     mergeClassNamesCore({ array, activateDebugger: true });
