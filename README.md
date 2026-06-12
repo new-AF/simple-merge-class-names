@@ -1,41 +1,54 @@
 # simple-merge-class-names
 
-Safely merge multiple CSS class names in _React/JSX/JavaScript_. Supports conditional class inclusion, and ignores invalid arguments.
+A class names merger for TypeScript, JavaScript, TSX / JSX (React).
 
-> For Production look into [https://www.npmjs.com/package/clsx](https://www.npmjs.com/package/clsx)
+> For production purposes there is also [https://www.npmjs.com/package/clsx](https://www.npmjs.com/package/clsx)
 
 ## Table of Contents
 
--   [simple-merge-class-names](#simple-merge-class-names)
-    -   [Table of Contents](#table-of-contents)
-    -   [The Genocidal Occupation Is Starving Gaza](#the-genocidal-occupation-is-starving-gaza)
-    -   [Installation](#installation)
-    -   [Usage](#usage)
-        -   [TypeScript Definitions](#typescript-definitions)
-        -   [Valid Arguments](#valid-arguments)
-        -   [Invalid Arguments](#invalid-arguments)
-        -   [Conditional class inclusion](#conditional-class-inclusion)
-        -   [Return Result](#return-result)
-        -   [Chaining](#chaining)
-    -   [Usage of Browser Debugger](#usage-of-browser-debugger)
-    -   [Testing Source Code](#testing-source-code)
-        -   [Run Once](#run-once)
-        -   [Run Watch Mode](#run-watch-mode)
-    -   [License](#license)
+- [simple-merge-class-names](#simple-merge-class-names)
+    - [Table of Contents](#table-of-contents)
+    - [Stop Starving Gaza](#stop-starving-gaza)
+    - [Install](#install)
+        - [Install `Prettier` too](#install-prettier-too)
+    - [Exported Functions](#exported-functions)
+    - [Non-scale Usage](#non-scale-usage)
+        - [Example](#example)
+    - [Scale Usage](#scale-usage)
+        - [Create intermediary `@/mergeClassNames.js`](#create-intermediary-mergeclassnamesjs)
+            - [Project Structure](#project-structure)
+            - [Enable `@`-style Imports in Vite](#enable--style-imports-in-vite)
+        - [Example](#example-1)
+            - [During Dev, Debug Entire Project](#during-dev-debug-entire-project)
+    - [Valid Arguments](#valid-arguments)
+        - [Example](#example-2)
+    - [Invalid Arguments](#invalid-arguments)
+        - [Example](#example-3)
+            - [Developer Console Warnings](#developer-console-warnings)
+    - [Conditional Class Inclusion](#conditional-class-inclusion)
+        - [Avoid Short-circuit Syntax](#avoid-short-circuit-syntax)
+    - [Return Result](#return-result)
+        - [Example](#example-4)
+    - [Side Effect](#side-effect)
+        - [Example](#example-5)
+    - [Chaining](#chaining)
+    - [Usage of Browser Debugger](#usage-of-browser-debugger)
+    - [Testing Source Code](#testing-source-code)
+        - [Run Once](#run-once)
+        - [Run Watch Mode](#run-watch-mode)
+    - [License](#license)
 
-## The Genocidal Occupation Is Starving Gaza
+## Stop Starving Gaza
 
--   [Donate](https://gazafunds.com/)
+- [Donate Direct Aid to Gazan Families](https://gazafunds.com/)
 
--   [(US) Demand Immediate Opening of ALL Gaza Border Crossings](https://act.uscpr.org/a/letaidin)
+- [Call US Congress and Demand Immediate Opening of ALL Gaza Border Crossings](https://act.uscpr.org/a/letaidin)
 
--   [Boycott Brands Supporting Gaza Holocaust](https://www.uplift.ie/bds/)
+- [Boycott Brands Supporting Gaza Holocaust](https://www.uplift.ie/bds/)
 
--   [Legal Action](https://www.hindrajabfoundation.org/perpetrators)
+- [Legal Action](https://www.hindrajabfoundation.org/perpetrators)
 
-_Palestine is fundamental human rights, not a political issue. End all financial and diplomatic ties with genocidal i\*rael_.
-
-## Installation
+## Install
 
 ```bash
 pnpm add simple-merge-class-names
@@ -47,18 +60,25 @@ yarn add simple-merge-class-names
 npm install simple-merge-class-names
 ```
 
-> _Recommended For VSCode: Install the `Prettier` extension_ _[https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) as it will nicely your format classes, and alleviate wrist strain because you will use single quotes for class names._
+### Install `Prettier` too
 
-## Usage
+[https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
-| Function                  | Prints console warnings | Activates debugger |
-| ------------------------- | ----------------------- | ------------------ |
-| `mergeClassNames`         | ✅                      | ❌                 |
-| `mergeClassNamesDebugger` | ✅                      | ✅                 |
+It will nicely format and split your classes across new lines, and alleviate wrist strain because you will use single quotes (single key) instead of double (2 keys).
 
-_Example_:
+## Exported Functions
+
+|                           | `console.warn`s | Invokes JS `debugger;` statement on invalid arguments, which pauses execution when Debugger is attached |
+| ------------------------- | --------------- | ------------------------------------------------------------------------------------------------------- |
+| `mergeClassNames`         | ✅              | ❌                                                                                                      |
+| `mergeClassNamesDebugger` | ✅              | ✅                                                                                                      |
+
+## Non-scale Usage
+
+### Example
 
 ```jsx
+// src/App.jsx
 import { mergeClassNames } from "simple-merge-class-names";
 
 const Component = ({ condition }) => {
@@ -69,7 +89,7 @@ const Component = ({ condition }) => {
                 condition ? "min-h-dvh" : false,
                 "grid",
                 "grid-rows-[auto_1fr_auto]",
-                "outline"
+                "outline",
             )}
         >
             Hello, world!
@@ -78,37 +98,106 @@ const Component = ({ condition }) => {
 };
 ```
 
-Acceptable Input is either:
+## Scale Usage
 
-1. non-empty string, not whitespace, of length >=1
-2. `value`
+![diagram explanation of best way to use package](./.github/images/root-file.png)
 
-Likewise Return value is either:
+### Create intermediary `@/mergeClassNames.js`
 
-### TypeScript Definitions
+#### Project Structure
 
-```ts
-export declare const mergeClassNames: (
-    ...args: (string | false)[]
-) => string | false;
-
-export declare const mergeClassNamesDebugger: (
-    ...args: (string | false)[]
-) => string | false;
+```
+my-react-app/
+├─ src/
+│  ├─ components/
+│  ├─ mergeClassNames.js  // <- create it here
+│  ├─ App.jsx
+│  └─ index.js
+├─ package.json
+├─ vite.config.js
+└─ README.md
 ```
 
-### Valid Arguments
+#### Enable `@`-style Imports in Vite
+
+`@` points to `my-react-app/src`
+
+```js
+// vite.config.js
+
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import path from "path";
+
+// https://vitejs.dev/config/
+export default defineConfig({
+    plugins: [react(), tailwindcss()],
+
+    resolve: {
+        alias: {
+            "@": path.resolve(__dirname, "src"), //  @ now points to "my-react-app/src"
+        },
+    },
+});
+```
+
+```js
+// src/mergeClassNames.js
+
+export { mergeClassNames } from "simple-merge-class-names";
+
+// export { mergeClassNames as mergeClassNamesDebugger } from "simple-merge-class-names";
+```
+
+And toggle-comment between the first and second lines as needed.
+
+### Example
+
+#### During Dev, Debug Entire Project
+
+```js
+// @/mergeClassNames.js
+
+// export { mergeClassNames } from "simple-merge-class-names";
+
+export { mergeClassNames as mergeClassNamesDebugger } from "simple-merge-class-names";
+```
+
+```jsx
+// @/App.jsx
+
+import { mergeClassNames } from "@/mergeClassNames.js";
+
+const Component = ({ condition }) => {
+    return (
+        <div
+            className={mergeClassNames(
+                "app",
+                condition ? "min-h-dvh" : false,
+                "grid",
+                "grid-rows-[auto_1fr_auto]",
+                "outline",
+            )}
+        >
+            Hello, world!
+        </div>
+    );
+};
+```
+
+## Valid Arguments
 
 Only 2:
 
-1. **Valid strings, not whitespace, of length >= 1**
+1. A valid string (not empty, not fully whitespace)
+2. Value `false`
 
-    _(As long as you have content in the string you're OK)_
-
-2. **`false`**
+### Example
 
 ```js
 mergeClassNames(
+    condition ? "daisy-btn-active" : false
     "mx-auto",
     "min-dvh    ",
     "   flex",
@@ -117,58 +206,60 @@ mergeClassNames(
     `
         gap-y-4
     `,
-    false,
-    condition ? "daisy-btn-active" : false
 );
 ```
 
-### Invalid Arguments
+## Invalid Arguments
 
--   **Empty strings**: _(e.g. `""`)_
--   **Whitespace** any consecutive combination of the following:
-    -   new lines,
-    -   spaces,
-    -   tabs
-    -   _(e.g._ `"   "`, `"\n "`, `"  \t  \n "`, _etc.)_
--   **`true`**
--   **`undefined`**
--   **`null`**
--   **Objects**
--   **Numbers**
--   **Big Int**
--   **Symbols**
+Anything that is not a valid argument, this includes:
 
-_All of above will be **ignored**, and cause a **warning to be printed** to the developer console._
+- Invalid strings:
+    - Empty strings: _(`""`)_
+    - Fully whitespace strings: any consecutive combination of the following:
+        - new lines,
+        - spaces,
+        - tabs
+        - _(e.g. `"   "`, `"\n "`, `"  \t  \n "`, etc.)_
+- `true`
+- `undefined`
+- `null`
+- Objects
+- Numbers
+- Big Int
+- Symbols
+
+_All of above will be **ignored**, and cause a `console.warn` to be printed_
+
+### Example
 
 ```js
 const someVariable = "";
 
 mergeClassNames(
-    someVariable, // empty string
-    "   ", // whitespace
-    "\n ", // whitespace
-    "  \t  \n ", // whitespace
-    `           // whitespace
+    someVariable,
+    "   ",
+    "\n ",
+    "  \t  \n ",
+    `          
         \n
     `,
-    true, // true
-    undefined, // undefined
-    null, // null
+    true,
+    undefined,
+    null,
     {
-        // object
-        name: "value",
-        email: "email@example.com",
+        name: "name",
+        email: "name@example.com",
     },
-    123, // number
-    123.45 // number
+    123,
+    123.45,
 );
 ```
 
+#### Developer Console Warnings
+
 ![screenshot of console.warn warnings because invalid arguments were provided and ignored, so no silent failing](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/console-warnings.png)
 
-### Conditional class inclusion
-
-Use this pattern:
+## Conditional Class Inclusion
 
 ```jsx
 mergeClassNames(condition ? "min-h-dvh" : false);
@@ -177,17 +268,57 @@ mergeClassNames(condition ? "min-h-dvh" : false);
 mergeClassNames(condition === true ? "min-h-dvh" : false);
 ```
 
-> _Avoid using the short-circuit syntax (`condition && "class-name"`) because in addition to being less readable code, it can produce falsy values which will be ignored (e.g. `0`, `""`, `undefined`, and `null`)_.
+### Avoid Short-circuit Syntax
 
-### Return Result
+Avoid the syntax (`condition && "class-name"`) because it can produce falsy values (e.g. `0`, `""`, `undefined`, `null`) which will be ignored and warned about.
 
-Either:
+## Return Result
+
+String of all merged valid classes. Invalid arguments are ignored and warned about.
+
+### Example
+
+```jsx
+import { mergeClassNames } from "simple-merge-class-names";
+
+// "app min-h-dvh grid grid-rows-[auto_1fr_auto] outline"
+mergeClassNames(
+    " app ",
+    undefined,
+    [" test "],
+    { key: "value" },
+    "",
+    "min-h-dvh",
+    "grid ",
+    true,
+    null,
+    "grid-rows-[auto_1fr_auto]",
+    "outline",
+    " ",
+);
+```
+
+## Side Effect
+
+`console.warn`s if arguments contain invalid arguments.
+
+### Example
+
+```
+Ignored invalid argument: >undefined< (undefined)
+Ignored invalid argument: > test < (object)
+Ignored invalid argument: >[object Object]< (object)
+Ignored empty string: ""
+Ignored invalid argument: >true< (boolean)
+Ignored invalid argument: >null< (object)
+Ignored whitespace string:
+```
+
+> _It can be empy_
 
 1. **Valid `string`, never whitespace, always length >= 1**
 
-2. _or_ **`false`** _(if all input arguments were invalid)_
-
-### Chaining
+## Chaining
 
 Because of safe return types you can chain calls safely without worrying about warnings or arguments being ignored.
 
@@ -212,7 +343,7 @@ const Component = ({ condition }) => {
                 condition ? "min-h-dvh" : false,
                 "grid",
                 "grid-rows-[auto_1fr_auto]",
-                "outline"
+                "outline",
             )}
         >
             Hello, world!
@@ -230,8 +361,8 @@ const Component = ({ condition }) => {
 ![screenshot of Firefox Debugger section with Pause on debugger statement ticked on](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/debugger-check.png)
 
 3.  Refresh the page, the debugger should connect:
-    -   Navigate to the **_Call stack_**
-    -   Click the function/component right before _`mergeClassNamesDebugger`_
+    - Navigate to the **_Call stack_**
+    - Click the function/component right before _`mergeClassNamesDebugger`_
 
 ![screenshot of Firefox debugger active because of `undefined` invalid class name argument](https://raw.githubusercontent.com/new-AF/simple-merge-class-names/main/.github/images/debugger-active.png)
 

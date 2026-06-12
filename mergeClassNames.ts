@@ -19,38 +19,25 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// valid arguments: non-empty strings and `false`
-// invalid arguments: empty strings, anything that's not value `false`
+/*
+Valid arguments:
+    1) non-empty non-fully-whitspace strings
+    2) `false`
 
-// to be exported
-
-const isTypeString = (value: unknown) => typeof value === "string";
-
-const isEmptyString = (value: unknown) =>
-    isTypeString(value) && value.length === 0;
-
-const isWhiteSpace = (value: unknown) =>
-    isTypeString(value) && value.trim().length === 0;
-
-export const isValidString = (value: unknown) =>
-    !isEmptyString(value) && !isWhiteSpace(value);
-
-type userInputArray = Array<string | false>;
-
-type coreArguments = {
-    array: userInputArray;
-    activateDebugger: boolean;
-};
-
-const mergeClassNamesCore = ({ array, activateDebugger }: coreArguments) => {
-    const kept: string[] = [];
+Invalid arguments: anything else
+*/
+const mergeClassNamesCore0 = ({ array, activateDebugger }) => {
+    const kept = [];
     const space = " ";
 
     array.forEach(
         (element) => {
-            if (!isTypeString(element)) {
+            const elementType = typeof element;
+            const isString = elementType === "string";
+
+            if (!isString) {
                 console.warn(
-                    `Ignored invalid argument: >${element}< (${typeof element})`
+                    `Ignored invalid argument: >${element}< (${elementType})`,
                 );
 
                 if (activateDebugger) {
@@ -60,7 +47,9 @@ const mergeClassNamesCore = ({ array, activateDebugger }: coreArguments) => {
                 return;
             } // end not a string
 
-            if (isEmptyString(element)) {
+            const isEmptyString = element.length === 0;
+
+            if (isEmptyString) {
                 console.warn(`Ignored empty string: ""`);
 
                 if (activateDebugger) {
@@ -71,7 +60,9 @@ const mergeClassNamesCore = ({ array, activateDebugger }: coreArguments) => {
             } //  empty string
 
             const trimmed = element.trim();
-            if (isWhiteSpace(trimmed)) {
+            const isWhiteSpace = trimmed.length === 0;
+
+            if (isWhiteSpace) {
                 console.warn(`Ignored whitespace string: ${element}`);
 
                 if (activateDebugger) {
@@ -82,15 +73,79 @@ const mergeClassNamesCore = ({ array, activateDebugger }: coreArguments) => {
             } // whitespace
 
             kept.push(trimmed);
-        } // end for each
+        }, // end for each
     );
 
-    const className = kept.join(space);
-    return className;
+    const finalClassName = kept.join(space);
+    return finalClassName;
 };
 
-export const mergeClassNames = (...array: userInputArray) =>
-    mergeClassNamesCore({ array, activateDebugger: false });
+export const mergeClassNames0 = (...array) =>
+    mergeClassNamesCore({
+        array,
+        activateDebugger: false,
+    });
 
-export const mergeClassNamesDebugger = (...array: userInputArray) =>
-    mergeClassNamesCore({ array, activateDebugger: true });
+export const mergeClassNamesDebugger0 = (...array) =>
+    mergeClassNamesCore({
+        array,
+        activateDebugger: true,
+    });
+
+enum InavlidArgument {
+    NotAString,
+    Whitespace,
+}
+
+type MaybeArgument = {
+    value: unknown;
+    isValid: boolean;
+    error?: InavlidArgument;
+};
+
+const mergeClassNamesCore = () => {};
+
+export const mergeClassNames = (...input: string[]) => {
+    // FP pattern of mapping values with extra information.
+    // The core computes data.
+    const maybeObjects = input.map((value): MaybeArgument => {
+        // because TS types disappear in JS runtime
+        if (typeof value !== "string") {
+            return {
+                value,
+                isValid: false,
+                error: InavlidArgument.NotAString,
+            };
+        }
+
+        // it's a string
+        const trimmed = value.trim();
+
+        if (trimmed === "") {
+            return {
+                value: trimmed,
+                isValid: false,
+                error: InavlidArgument.Whitespace,
+            };
+        }
+
+        return {
+            value: trimmed,
+            isValid: true,
+        };
+    });
+
+    const valid = maybeObjects.filter(({ isValid }) => isValid);
+    const trimmed = valid.map(({ value }) => value);
+    const joined = trimmed.join(" ");
+    return joined;
+};
+
+type Options = {
+    consoleWarn: boolean;
+    activateDebugger: boolean;
+};
+
+const customMergeClassNames = () => {};
+
+export const mergeClassNamesDebugger = mergeClassNames;

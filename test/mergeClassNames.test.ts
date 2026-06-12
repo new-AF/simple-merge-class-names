@@ -1,5 +1,6 @@
 import { test, expect } from "vitest";
-import { mergeClassNames, mergeClassNamesDebugger } from "../mergeClassNames";
+import { mergeClassNames } from "../mergeClassNames";
+import { mergeClassNamesDebugger } from "../mergeClassNames";
 
 const classNameCases = [
     { input: [], expected: "" },
@@ -44,6 +45,9 @@ classNameCases.forEach(({ input, expected }) => {
         Expected output: '${expected}'`;
 
     test(displayString, () => {
-        expect(mergeClassNamesDebugger(...input)).toBe(expected);
+        console.log({ input });
+        const output = mergeClassNamesDebugger(...input);
+        console.log({ output });
+        expect(output).toBe(expected);
     });
 });
