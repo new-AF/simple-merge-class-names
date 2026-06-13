@@ -97,18 +97,16 @@ enum InavlidArgument {
     Whitespace,
 }
 
-type MaybeArgument = {
+type Argument = {
     value: unknown;
     isValid: boolean;
     error?: InavlidArgument;
 };
 
-const mergeClassNamesCore = () => {};
-
-export const mergeClassNames = (...input: string[]) => {
+const classify = (input: string[]): Argument[] => {
     // FP pattern of mapping values with extra information.
     // The core computes data.
-    const maybeObjects = input.map((value): MaybeArgument => {
+    const maybeObjects = input.map((value): Argument => {
         // because TS types disappear in JS runtime
         if (typeof value !== "string") {
             return {
@@ -135,17 +133,82 @@ export const mergeClassNames = (...input: string[]) => {
         };
     });
 
-    const valid = maybeObjects.filter(({ isValid }) => isValid);
+    return maybeObjects;
+};
+
+type InavlidArgumentFunction = (value: Argument) => void;
+
+const mergeClassNamesCore = (
+    values: string[],
+    onInvalidArgument?: InavlidArgumentFunction,
+) => {
+    // classify arguments
+    const maybe: Argument[] = classify(values);
+
+    // valid strings
+    const valid = maybe.filter(({ isValid }) => isValid);
+
+    // optional call invalid argument handlers: warn and activate debugger
+    if (onInvalidArgument) {
+        maybe
+            .filter(({ isValid }) => {
+                return !isValid;
+            })
+            .forEach(onInvalidArgument);
+    }
+
     const trimmed = valid.map(({ value }) => value);
     const joined = trimmed.join(" ");
     return joined;
 };
 
 type Options = {
-    consoleWarn: boolean;
-    activateDebugger: boolean;
+    "console-warn-invalid-and-whitespace-arguments": boolean;
+    "activate-debugger-on-invalid-arguments": boolean;
 };
 
-const customMergeClassNames = () => {};
+const warn = ({ isValid, value, error }: Argument) => {
+    if (isValid) {
+        return;
+    }
 
-export const mergeClassNamesDebugger = mergeClassNames;
+    console.warn("x", value);
+};
+
+const activateDebugger = ({ isValid, value }: Argument) => {
+    if (isValid) {
+        return;
+    }
+
+    debugger;
+};
+
+const createCustomMergeClassNames = (options: Options) => {
+    const invalidHandlers = [];
+
+    if (options["console-warn-invalid-and-whitespace-arguments"]) {
+        invalidHandlers.push(warn);
+    }
+
+    if (options["activate-debugger-on-invalid-arguments"]) {
+        invalidHandlers.push(activateDebugger);
+    }
+
+    const invalidArgumentHandler = (value: unknown) => {
+        invalidHandlers.forEach((func) => func(value));
+    };
+
+    // construct the function
+    return (...input: string[]) =>
+        mergeClassNamesCore(input, invalidArgumentHandler);
+};
+
+export const mergeClassNamesDebugger = createCustomMergeClassNames({
+    "activate-debugger-on-invalid-arguments": true,
+    "console-warn-invalid-and-whitespace-arguments": true,
+});
+
+export const mergeClassNames = createCustomMergeClassNames({
+    "activate-debugger-on-invalid-arguments": false,
+    "console-warn-invalid-and-whitespace-arguments": true,
+});
