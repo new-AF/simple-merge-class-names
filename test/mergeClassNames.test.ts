@@ -1,13 +1,12 @@
 import { test, expect } from "vitest";
-import { mergeClassNames } from "../mergeClassNames";
-import { mergeClassNamesDebugger } from "../mergeClassNames";
+import { mergeClassNames, mergeClassNamesDebugger } from "../mergeClassNames";
 
-const classNameCases = [
-    { input: [], expected: "" },
-    { input: [false], expected: "" },
-    { input: [null, undefined, ""], expected: "" }, // these will console.warn
-    { input: ["app"], expected: "app" },
-    { input: [" app  ", false], expected: "app" },
+const cases = [
+    { input: [], className: "" },
+    { input: [false], className: "" },
+    { input: [null, undefined, ""], className: "" }, // these will console.warn
+    { input: ["app"], className: "app" },
+    { input: [" app  ", false], className: "app" },
     {
         input: [
             "  app ",
@@ -23,31 +22,23 @@ const classNameCases = [
             "outline",
             "   ",
         ], // this one too
-        expected: "app min-h-dvh grid grid-rows-[auto_1fr_auto] outline",
+        className: "app min-h-dvh grid grid-rows-[auto_1fr_auto] outline",
     },
 ];
 
-classNameCases.forEach(({ input, expected }) => {
-    const stringifiedArray = JSON.stringify(input).slice(1, -1);
+cases.forEach(({ input, className }) => {
+    const stringifiedArray = JSON.stringify(input, null, 4).slice(1, -1);
 
-    const displayString = `Input: mergeClassNames(${stringifiedArray})
-        Expected output: '${expected}'`;
+    const display = `
+mergeClassNames(${stringifiedArray})
 
-    test(displayString, () => {
-        expect(mergeClassNames(...input)).toBe(expected);
-    });
-});
+mergeClassNamesDebugger(${stringifiedArray})
 
-classNameCases.forEach(({ input, expected }) => {
-    const stringifiedArray = JSON.stringify(input).slice(1, -1);
+==> Expected output: "${className}"
+`;
 
-    const displayString = `Input: mergeClassNamesDebugger(${stringifiedArray})
-        Expected output: '${expected}'`;
-
-    test(displayString, () => {
-        console.log({ input });
-        const output = mergeClassNamesDebugger(...input);
-        console.log({ output });
-        expect(output).toBe(expected);
+    test(display, () => {
+        expect(mergeClassNames(...input)).toBe(className);
+        expect(mergeClassNamesDebugger(...input)).toBe(className);
     });
 });

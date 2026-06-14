@@ -39,6 +39,7 @@ type Argument = {
     error?: InavlidArgument;
 };
 
+// classifies input arguments
 const classify = (input: string[]): Argument[] => {
     // FP pattern of mapping values with extra information.
     // The core computes data.
@@ -80,10 +81,10 @@ const classify = (input: string[]): Argument[] => {
     return maybeObjects;
 };
 
-// warns or activates debugger
+// called on invalid arguments, warns or activates debugger or both
 type InavlidArgumentFunction = (value: Argument) => void;
 
-// classifies arguments, filters invalid and joins into final className
+// joins valid strings into final className
 const mergeClassNamesCore = (
     values: string[],
     onInvalidArgument?: InavlidArgumentFunction,
