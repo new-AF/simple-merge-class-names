@@ -146,7 +146,7 @@ const activateDebugger = ({ isValid, value }: Argument) => {
 
 // creates custom mergeClassNames e.g. warn = false, activate debugger = true
 const createCustomMergeClassNames = (options: Options) => {
-    const invalidHandlers = [];
+    const invalidHandlers: InavlidArgumentFunction[] = [];
 
     if (options["console-warn-invalid-and-whitespace-arguments"]) {
         invalidHandlers.push(warn);
@@ -156,7 +156,7 @@ const createCustomMergeClassNames = (options: Options) => {
         invalidHandlers.push(activateDebugger);
     }
 
-    const invalidArgumentHandler = (value: unknown) => {
+    const invalidArgumentHandler = (value: Argument) => {
         invalidHandlers.forEach((func) => func(value));
     };
 
