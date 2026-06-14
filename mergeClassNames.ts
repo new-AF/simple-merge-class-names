@@ -26,74 +26,10 @@ Valid arguments:
 
 Invalid arguments: anything else
 */
-const mergeClassNamesCore0 = ({ array, activateDebugger }) => {
-    const kept = [];
-    const space = " ";
-
-    array.forEach(
-        (element) => {
-            const elementType = typeof element;
-            const isString = elementType === "string";
-
-            if (!isString) {
-                console.warn(
-                    `Ignored invalid argument: >${element}< (${elementType})`,
-                );
-
-                if (activateDebugger) {
-                    debugger;
-                }
-
-                return;
-            } // end not a string
-
-            const isEmptyString = element.length === 0;
-
-            if (isEmptyString) {
-                console.warn(`Ignored empty string: ""`);
-
-                if (activateDebugger) {
-                    debugger;
-                }
-
-                return;
-            } //  empty string
-
-            const trimmed = element.trim();
-            const isWhiteSpace = trimmed.length === 0;
-
-            if (isWhiteSpace) {
-                console.warn(`Ignored whitespace string: ${element}`);
-
-                if (activateDebugger) {
-                    debugger;
-                }
-
-                return;
-            } // whitespace
-
-            kept.push(trimmed);
-        }, // end for each
-    );
-
-    const finalClassName = kept.join(space);
-    return finalClassName;
-};
-
-export const mergeClassNames0 = (...array) =>
-    mergeClassNamesCore({
-        array,
-        activateDebugger: false,
-    });
-
-export const mergeClassNamesDebugger0 = (...array) =>
-    mergeClassNamesCore({
-        array,
-        activateDebugger: true,
-    });
 
 enum InavlidArgument {
     NotAString,
+    EmptyString,
     Whitespace,
 }
 
@@ -117,6 +53,14 @@ const classify = (input: string[]): Argument[] => {
         }
 
         // it's a string
+        if (value === "") {
+            return {
+                value,
+                isValid: false,
+                error: InavlidArgument.EmptyString,
+            };
+        }
+
         const trimmed = value.trim();
 
         if (trimmed === "") {
@@ -136,8 +80,10 @@ const classify = (input: string[]): Argument[] => {
     return maybeObjects;
 };
 
+// warns or activates debugger
 type InavlidArgumentFunction = (value: Argument) => void;
 
+// classifies arguments, filters invalid and joins into final className
 const mergeClassNamesCore = (
     values: string[],
     onInvalidArgument?: InavlidArgumentFunction,
@@ -162,19 +108,34 @@ const mergeClassNamesCore = (
     return joined;
 };
 
+// options to createCustomMergeClassNames
 type Options = {
     "console-warn-invalid-and-whitespace-arguments": boolean;
     "activate-debugger-on-invalid-arguments": boolean;
 };
 
+// console.warn
 const warn = ({ isValid, value, error }: Argument) => {
     if (isValid) {
         return;
     }
 
-    console.warn("x", value);
+    if (error === InavlidArgument.NotAString) {
+        console.warn(
+            `Ignored invalid non-string argument: >${value}< (type ${typeof value})`,
+        );
+    }
+
+    if (error === InavlidArgument.EmptyString) {
+        console.warn(`Ignored invalid empty string argument: "${value}"`);
+    }
+
+    if (error === InavlidArgument.Whitespace) {
+        console.warn(`Ignored invalid whitespace string argument: "${value}"`);
+    }
 };
 
+// activates debugger
 const activateDebugger = ({ isValid, value }: Argument) => {
     if (isValid) {
         return;
@@ -183,6 +144,7 @@ const activateDebugger = ({ isValid, value }: Argument) => {
     debugger;
 };
 
+// creates custom mergeClassNames e.g. warn = false, activate debugger = true
 const createCustomMergeClassNames = (options: Options) => {
     const invalidHandlers = [];
 
@@ -203,12 +165,12 @@ const createCustomMergeClassNames = (options: Options) => {
         mergeClassNamesCore(input, invalidArgumentHandler);
 };
 
-export const mergeClassNamesDebugger = createCustomMergeClassNames({
-    "activate-debugger-on-invalid-arguments": true,
+export const mergeClassNames = createCustomMergeClassNames({
     "console-warn-invalid-and-whitespace-arguments": true,
+    "activate-debugger-on-invalid-arguments": false,
 });
 
-export const mergeClassNames = createCustomMergeClassNames({
-    "activate-debugger-on-invalid-arguments": false,
+export const mergeClassNamesDebugger = createCustomMergeClassNames({
     "console-warn-invalid-and-whitespace-arguments": true,
+    "activate-debugger-on-invalid-arguments": true,
 });
