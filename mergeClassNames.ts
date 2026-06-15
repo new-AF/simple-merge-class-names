@@ -21,13 +21,18 @@
 
 /*
 Valid arguments:
-    1) non-empty non-fully-whitspace strings
-    2) `false`
+    1) valid strings, which are non-empty strings, and non-whitespace strings
+    2) value `false`
 
-Invalid arguments: anything else
+Invalid arguments: anything else e.g.
+    - empty strings
+    - whitespace strings
+    - numbers
+    - value true
+    - 
 */
 
-enum InavlidArgument {
+enum InavlidArgumentEnum {
     NotAString,
     EmptyString,
     Whitespace,
@@ -36,20 +41,32 @@ enum InavlidArgument {
 type Argument = {
     value: unknown;
     isValid: boolean;
-    error?: InavlidArgument;
+    ignore: boolean; // for value `false` ignore including it in classNames
+    error?: InavlidArgumentEnum;
 };
 
+type ValidArgument = string | false;
+
 // classifies input arguments
-const classify = (input: string[]): Argument[] => {
+const classify = (input: ValidArgument[]): Argument[] => {
     // FP pattern of mapping values with extra information.
     // The core computes data.
     const maybeObjects = input.map((value): Argument => {
         // because TS types disappear in JS runtime
+        if (value === false) {
+            return {
+                value,
+                ignore: true,
+                isValid: true,
+            };
+        }
+
         if (typeof value !== "string") {
             return {
                 value,
                 isValid: false,
-                error: InavlidArgument.NotAString,
+                ignore: true,
+                error: InavlidArgumentEnum.NotAString,
             };
         }
 
@@ -58,7 +75,8 @@ const classify = (input: string[]): Argument[] => {
             return {
                 value,
                 isValid: false,
-                error: InavlidArgument.EmptyString,
+                ignore: true,
+                error: InavlidArgumentEnum.EmptyString,
             };
         }
 
@@ -68,13 +86,15 @@ const classify = (input: string[]): Argument[] => {
             return {
                 value: trimmed,
                 isValid: false,
-                error: InavlidArgument.Whitespace,
+                ignore: true,
+                error: InavlidArgumentEnum.Whitespace,
             };
         }
 
         return {
             value: trimmed,
             isValid: true,
+            ignore: false,
         };
     });
 
@@ -82,18 +102,18 @@ const classify = (input: string[]): Argument[] => {
 };
 
 // called on invalid arguments, warns or activates debugger or both
-type InavlidArgumentFunction = (value: Argument) => void;
+type InavlidArgumentEnumFunction = (value: Argument) => void;
 
 // joins valid strings into final className
 const mergeClassNamesCore = (
-    values: string[],
-    onInvalidArgument?: InavlidArgumentFunction,
+    values: ValidArgument[],
+    onInvalidArgument?: InavlidArgumentEnumFunction,
 ) => {
     // classify arguments
     const maybe: Argument[] = classify(values);
 
     // valid strings
-    const valid = maybe.filter(({ isValid }) => isValid);
+    const valid = maybe.filter(({ isValid, ignore }) => isValid && !ignore);
 
     // optional call invalid argument handlers: warn and activate debugger
     if (onInvalidArgument) {
@@ -121,17 +141,17 @@ const warn = ({ isValid, value, error }: Argument) => {
         return;
     }
 
-    if (error === InavlidArgument.NotAString) {
+    if (error === InavlidArgumentEnum.NotAString) {
         console.warn(
-            `Ignored invalid non-string argument: >${value}< (type ${typeof value})`,
+            `Ignored invalid argument: >${value}< (type ${typeof value})`,
         );
     }
 
-    if (error === InavlidArgument.EmptyString) {
+    if (error === InavlidArgumentEnum.EmptyString) {
         console.warn(`Ignored invalid empty string argument: "${value}"`);
     }
 
-    if (error === InavlidArgument.Whitespace) {
+    if (error === InavlidArgumentEnum.Whitespace) {
         console.warn(`Ignored invalid whitespace string argument: "${value}"`);
     }
 };
@@ -147,7 +167,7 @@ const activateDebugger = ({ isValid, value }: Argument) => {
 
 // creates custom mergeClassNames e.g. warn = false, activate debugger = true
 const createCustomMergeClassNames = (options: Options) => {
-    const invalidHandlers: InavlidArgumentFunction[] = [];
+    const invalidHandlers: InavlidArgumentEnumFunction[] = [];
 
     if (options["console-warn-invalid-and-whitespace-arguments"]) {
         invalidHandlers.push(warn);
