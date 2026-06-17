@@ -1,18 +1,18 @@
 import { test, expect, vi } from "vitest";
 import { mergeClassNames, mergeClassNamesDebugger } from "../mergeClassNames";
-
-const makeE = () => {};
+import { createWarning } from "../createWarning";
+import { classify } from "../classify";
 
 const cases = [
     {
         input: [],
         className: "",
-        warnings: [],
+        consoleWarns: false,
     },
-    { input: [false], className: "", warnings: [] },
-    { input: [null, undefined, ""], className: "", warnings: [] }, // these will console.warn
-    { input: ["app"], className: "app", warnings: [] },
-    { input: [" app  ", false], className: "app", warnings: [] },
+    { input: [false], className: "", consoleWarns: false },
+    { input: [null, undefined, ""], className: "", consoleWarns: true }, // these will console.warn
+    { input: ["app"], className: "app", consoleWarns: false },
+    { input: [" app  ", false], className: "app", consoleWarns: false },
     {
         input: [
             "  app ",
@@ -29,11 +29,11 @@ const cases = [
             "   ",
         ], // this one too
         className: "app min-h-dvh grid grid-rows-[auto_1fr_auto] outline",
-        warnings: [],
+        consoleWarns: true,
     },
 ];
 
-cases.forEach(({ input, className, warnings }) => {
+cases.forEach(({ input, className, consoleWarns }) => {
     const stringifiedArray = JSON.stringify(input, null, 4).slice(1, -1);
 
     const display = `
@@ -43,7 +43,7 @@ mergeClassNamesDebugger(${stringifiedArray})
 
 ==> Expected output: "${className}"
 
-==> Expected warnings: ${warnings.join(", ")}
+==> Expected warnings: ${consoleWarns ? "yes" : "no"}
 `;
 
     test(display, () => {
@@ -53,7 +53,12 @@ mergeClassNamesDebugger(${stringifiedArray})
         expect(mergeClassNames(...input)).toBe(className);
 
         expect(warnSpy.mock.calls.map(([message]) => message)).toEqual(
-            warnings,
+            consoleWarns
+                ? input
+                      .map(classify)
+                      .filter((element) => !element.isValid)
+                      .map(createWarning)
+                : [],
         );
 
         expect(mergeClassNamesDebugger(...input)).toBe(className);

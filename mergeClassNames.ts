@@ -32,74 +32,9 @@ Invalid arguments: anything else e.g.
     - 
 */
 
-enum InavlidArgumentEnum {
-    NotAString,
-    EmptyString,
-    Whitespace,
-}
-
-type Argument = {
-    value: unknown;
-    isValid: boolean;
-    ignore: boolean; // for value `false` ignore including it in classNames
-    error?: InavlidArgumentEnum;
-};
-
-type ValidArgument = string | false;
-
-// classifies input arguments
-const classify = (input: ValidArgument[]): Argument[] => {
-    // FP pattern of mapping values with extra information.
-    // The core computes data.
-    const maybeObjects = input.map((value): Argument => {
-        // because TS types disappear in JS runtime
-        if (value === false) {
-            return {
-                value,
-                ignore: true,
-                isValid: true,
-            };
-        }
-
-        if (typeof value !== "string") {
-            return {
-                value,
-                isValid: false,
-                ignore: true,
-                error: InavlidArgumentEnum.NotAString,
-            };
-        }
-
-        // it's a string
-        if (value === "") {
-            return {
-                value,
-                isValid: false,
-                ignore: true,
-                error: InavlidArgumentEnum.EmptyString,
-            };
-        }
-
-        const trimmed = value.trim();
-
-        if (trimmed === "") {
-            return {
-                value: trimmed,
-                isValid: false,
-                ignore: true,
-                error: InavlidArgumentEnum.Whitespace,
-            };
-        }
-
-        return {
-            value: trimmed,
-            isValid: true,
-            ignore: false,
-        };
-    });
-
-    return maybeObjects;
-};
+import { InavlidArgumentEnum, Argument, ValidArgument } from "./types";
+import { createWarning } from "./createWarning";
+import { classify } from "./classify";
 
 // called on invalid arguments, warns or activates debugger or both
 type InavlidArgumentEnumFunction = (value: Argument) => void;
@@ -110,7 +45,7 @@ const mergeClassNamesCore = (
     onInvalidArgument?: InavlidArgumentEnumFunction,
 ) => {
     // classify arguments
-    const maybe: Argument[] = classify(values);
+    const maybe: Argument[] = values.map(classify);
 
     // valid strings
     const valid = maybe.filter(({ isValid, ignore }) => isValid && !ignore);
@@ -136,24 +71,13 @@ type Options = {
 };
 
 // console.warn
-const warn = ({ isValid, value, error }: Argument) => {
+const warn = ({ isValid, value, error, ignore }: Argument) => {
     if (isValid) {
         return;
     }
 
-    if (error === InavlidArgumentEnum.NotAString) {
-        console.warn(
-            `Ignored invalid argument: >${value}< (type ${typeof value})`,
-        );
-    }
-
-    if (error === InavlidArgumentEnum.EmptyString) {
-        console.warn(`Ignored invalid empty string argument: "${value}"`);
-    }
-
-    if (error === InavlidArgumentEnum.Whitespace) {
-        console.warn(`Ignored invalid whitespace string argument: "${value}"`);
-    }
+    const warning = createWarning({ isValid, value, error, ignore });
+    console.warn(warning);
 };
 
 // activates debugger
