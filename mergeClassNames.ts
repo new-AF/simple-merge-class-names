@@ -60,7 +60,7 @@ const mergeClassNamesCore = (
     // valid strings only
     const classNames = classified
         .filter((obj): obj is ClassifiedValid => obj.isValid && !obj.ignore)
-        .map(({ value }) => value);
+        .map(({ value }) => value as string);
 
     const finalClassName = classNames.join(" ");
     return finalClassName;
