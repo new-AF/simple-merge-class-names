@@ -35,7 +35,7 @@ import {
     ValidArgument,
     InavlidArgumentFunction,
     ClassifiedValid,
-    Classified,
+    ClassifiedInvalid,
 } from "./types";
 
 import { classify, warn, activateDebugger } from "./utils";
@@ -46,23 +46,22 @@ const mergeClassNamesCore = (
     onInvalidArgument?: InavlidArgumentFunction,
 ) => {
     // classify arguments
-    const classified: Classified[] = values.map(classify);
+    const classified = values.map(classify);
 
-    // valid strings
-    const validAndTrimmed: ClassifiedValid[] = classified.filter(
-        ({ isValid, ignore }) => isValid && !ignore,
-    );
-
-    // optional call invalid Classified handlers: warn and activate debugger
+    // optional call invalid arguments handlers: warn and/or activate debugger
     if (onInvalidArgument) {
         classified
-            .filter(({ isValid }) => {
-                return !isValid;
+            .filter((obj): obj is ClassifiedInvalid => {
+                return !obj.isValid;
             })
             .forEach(onInvalidArgument);
     }
 
-    const classNames = validAndTrimmed.map(({ value }) => value);
+    // valid strings only
+    const classNames = classified
+        .filter((obj): obj is ClassifiedValid => obj.isValid && !obj.ignore)
+        .map(({ value }) => value);
+
     const finalClassName = classNames.join(" ");
     return finalClassName;
 };
@@ -85,11 +84,11 @@ const createCustomMergeClassNames = (options: Options) => {
         invalidHandlers.push(activateDebugger);
     }
 
-    const invalidArgumentHandler = (value: Classified) => {
+    const invalidArgumentHandler = (value: ClassifiedInvalid) => {
         invalidHandlers.forEach((func) => func(value));
     };
 
-    // construct the function
+    // construct the mergeClassNames function
     return (...input: string[]) =>
         mergeClassNamesCore(input, invalidArgumentHandler);
 };
