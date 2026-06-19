@@ -1,7 +1,6 @@
 import { test, expect, vi } from "vitest";
 import { mergeClassNames, mergeClassNamesDebugger } from "../mergeClassNames";
-import { createWarning } from "../createWarning";
-import { classify } from "../classify";
+import { warningMessage, classify } from "../utils";
 
 const cases = [
     {
@@ -57,7 +56,7 @@ mergeClassNamesDebugger(${stringifiedArray})
                 ? input
                       .map(classify)
                       .filter((element) => !element.isValid)
-                      .map(createWarning)
+                      .map(warningMessage, classify)
                 : [],
         );
 

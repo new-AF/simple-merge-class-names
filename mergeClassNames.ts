@@ -17,9 +17,8 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+ 
 
-/*
 Valid arguments:
     1) valid strings, which are non-empty strings, and non-whitespace strings
     2) value `false`
@@ -32,36 +31,40 @@ Invalid arguments: anything else e.g.
     - 
 */
 
-import { InavlidArgumentEnum, Argument, ValidArgument } from "./types";
-import { createWarning } from "./createWarning";
-import { classify } from "./classify";
+import {
+    ValidArgument,
+    InavlidArgumentFunction,
+    ClassifiedValid,
+    Classified,
+} from "./types";
 
-// called on invalid arguments, warns or activates debugger or both
-type InavlidArgumentEnumFunction = (value: Argument) => void;
+import { classify, warn, activateDebugger } from "./utils";
 
 // joins valid strings into final className
 const mergeClassNamesCore = (
     values: ValidArgument[],
-    onInvalidArgument?: InavlidArgumentEnumFunction,
+    onInvalidArgument?: InavlidArgumentFunction,
 ) => {
     // classify arguments
-    const maybe: Argument[] = values.map(classify);
+    const classified: Classified[] = values.map(classify);
 
     // valid strings
-    const valid = maybe.filter(({ isValid, ignore }) => isValid && !ignore);
+    const validAndTrimmed: ClassifiedValid[] = classified.filter(
+        ({ isValid, ignore }) => isValid && !ignore,
+    );
 
-    // optional call invalid argument handlers: warn and activate debugger
+    // optional call invalid Classified handlers: warn and activate debugger
     if (onInvalidArgument) {
-        maybe
+        classified
             .filter(({ isValid }) => {
                 return !isValid;
             })
             .forEach(onInvalidArgument);
     }
 
-    const trimmed = valid.map(({ value }) => value);
-    const joined = trimmed.join(" ");
-    return joined;
+    const classNames = validAndTrimmed.map(({ value }) => value);
+    const finalClassName = classNames.join(" ");
+    return finalClassName;
 };
 
 // options to createCustomMergeClassNames
@@ -70,28 +73,9 @@ type Options = {
     "activate-debugger-on-invalid-arguments": boolean;
 };
 
-// console.warn
-const warn = ({ isValid, value, error, ignore }: Argument) => {
-    if (isValid) {
-        return;
-    }
-
-    const warning = createWarning({ isValid, value, error, ignore });
-    console.warn(warning);
-};
-
-// activates debugger
-const activateDebugger = ({ isValid, value }: Argument) => {
-    if (isValid) {
-        return;
-    }
-
-    debugger;
-};
-
 // creates custom mergeClassNames e.g. warn = false, activate debugger = true
 const createCustomMergeClassNames = (options: Options) => {
-    const invalidHandlers: InavlidArgumentEnumFunction[] = [];
+    const invalidHandlers: InavlidArgumentFunction[] = [];
 
     if (options["console-warn-invalid-and-whitespace-arguments"]) {
         invalidHandlers.push(warn);
@@ -101,7 +85,7 @@ const createCustomMergeClassNames = (options: Options) => {
         invalidHandlers.push(activateDebugger);
     }
 
-    const invalidArgumentHandler = (value: Argument) => {
+    const invalidArgumentHandler = (value: Classified) => {
         invalidHandlers.forEach((func) => func(value));
     };
 
