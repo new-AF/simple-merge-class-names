@@ -68,25 +68,30 @@ export const warningMessage = ({
         reason === ClassifiedInavlidReason.NotAString &&
         (value === null || value === undefined)
     ) {
-        return `Ignored invalid Classified, ${value}`;
+        return `Ignored invalid argument: ${value}`;
     }
 
     // array
     if (reason === ClassifiedInavlidReason.NotAString && Array.isArray(value)) {
-        return `Ignored invalid Classified, array: "${value.slice(0, 3)}" ...`;
+        const sub = value.slice(0, 3);
+        const string = sub.join(", ");
+        const ellipsisPart = value.length > sub.length ? ", ..." : "";
+
+        return `Ignored invalid argument, array: [${string}${ellipsisPart}] ...`;
     }
 
     // empty string
     if (reason === ClassifiedInavlidReason.EmptyString) {
-        return `Ignored invalid empty string Classified.`;
+        return `Ignored invalid argument: empty string.`;
     }
 
     // whitespace
     if (reason === ClassifiedInavlidReason.Whitespace) {
-        return `Ignored invalid whitespace string Classified: "${value}"`;
+        return `Ignored invalid argument, whitespace string: "${value}"`;
     }
 
-    return `Ignored invalid Classified: "${value}"`;
+    // object
+    return `Ignored invalid argument, Object: "${value}"`;
 };
 
 // console.warn

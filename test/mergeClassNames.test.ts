@@ -1,6 +1,6 @@
 import { test, expect, vi } from "vitest";
 import { mergeClassNames, mergeClassNamesDebugger } from "../mergeClassNames";
-import { warningMessage, classify } from "../utils";
+import { warningMessage, classify, warningMessage } from "../utils";
 
 const cases = [
     {
@@ -32,17 +32,27 @@ const cases = [
     },
 ];
 
+const prettyPrint = (value: unknown) => JSON.stringify(value, null, 4);
+
 cases.forEach(({ input, className, consoleWarns }) => {
-    const stringifiedArray = JSON.stringify(input, null, 4).slice(1, -1);
+    const stringifiedArray = prettyPrint(input);
+
+    const warnings = consoleWarns
+        ? input
+              .map(classify)
+              .filter((obj) => !obj.isValid)
+              .map(warningMessage)
+        : [];
 
     const display = `
 mergeClassNames(${stringifiedArray})
 
 mergeClassNamesDebugger(${stringifiedArray})
 
+==> Expected warnings: ${prettyPrint(warnings)}
+
 ==> Expected output: "${className}"
 
-==> Expected warnings: ${consoleWarns ? "yes" : "no"}
 `;
 
     test(display, () => {
@@ -52,12 +62,7 @@ mergeClassNamesDebugger(${stringifiedArray})
         expect(mergeClassNames(...input)).toBe(className);
 
         expect(warnSpy.mock.calls.map(([message]) => message)).toEqual(
-            consoleWarns
-                ? input
-                      .map(classify)
-                      .filter((element) => !element.isValid)
-                      .map(warningMessage, classify)
-                : [],
+            warnings,
         );
 
         expect(mergeClassNamesDebugger(...input)).toBe(className);
