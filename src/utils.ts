@@ -15,7 +15,7 @@ export const classify = (value: ValidArgument): Classified => {
     // valid but ignored
     if (value === false) {
         return {
-            status: "ignored",
+            status: "ignore",
             value,
         };
     }

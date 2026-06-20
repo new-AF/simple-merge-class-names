@@ -3,8 +3,8 @@ import {
     mergeClassNames,
     mergeClassNamesDebugger,
     createCustomMergeClassNames,
-} from "../mergeClassNames";
-import { warningMessage, classify, getInvalid } from "../utils";
+} from "../src/mergeClassNames";
+import { warningMessage, classify, getInvalid } from "../src/utils";
 
 const tests = [
     {

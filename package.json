@@ -4,18 +4,21 @@
     "description": " A class names merger for TypeScript, JavaScript, TSX, and JSX (React)",
     "exports": {
         ".": {
-            "import": "./mergeClassNames.js",
-            "types": "./mergeClassNames.d.ts"
+            "import": "./dist/index.mjs",
+            "types": "./dist/index.d.mts"
         }
     },
+    "main": "./dist/index.mjs",
+    "types": "./dist/index.d.mts",
     "files": [
-        "mergeClassNames.js",
-        "mergeClassNames.d.ts",
+        "dist",
         "LICENSE.txt",
         "README.md"
     ],
     "sideEffects": false,
     "scripts": {
+        "build": "tsup",
+        "prepublishOnly": "pnpm tsup",
         "test": "vitest",
         "test:watch": "vitest --watch",
         "test:ui": "vitest --ui"
@@ -41,6 +44,8 @@
     },
     "homepage": "https://github.com/new-AF/simple-merge-class-names",
     "devDependencies": {
+        "tsup": "^8.5.1",
+        "typescript": "^6.0.3",
         "vitest": "^3.2.3"
     }
 }
