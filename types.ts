@@ -1,16 +1,20 @@
 export type ValidArgument = string | false;
 
-export type ClassifiedValid = {
+export type ClassifiedClassName = {
+    status: "class-name";
     value: string;
-    isValid: true;
-    ignore: false;
 };
 
 // for value `false` ignore including it in classNames
 export type ClassifiedValueFalse = {
+    status: "ignore";
     value: false;
-    isValid: true;
-    ignore: true;
+};
+
+export type ClassifiedInvalid = {
+    status: "invalid";
+    value: unknown;
+    reason: ClassifiedInavlidReason;
 };
 
 export enum ClassifiedInavlidReason {
@@ -19,14 +23,8 @@ export enum ClassifiedInavlidReason {
     Whitespace,
 }
 
-export type ClassifiedInvalid = {
-    value: unknown;
-    isValid: false;
-    reason: ClassifiedInavlidReason;
-};
-
 export type Classified =
-    | ClassifiedValid
+    | ClassifiedClassName
     | ClassifiedValueFalse
     | ClassifiedInvalid;
 

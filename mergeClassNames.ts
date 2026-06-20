@@ -39,10 +39,10 @@ import {
 
 import {
     classify,
-    getValid,
     getInvalid,
     warn,
     activateDebugger,
+    getClassNames,
 } from "./utils";
 
 // joins valid strings into final className
@@ -59,7 +59,9 @@ const mergeClassNamesCore = (
     }
 
     // valid strings only
-    const classNames: string[] = getValid(classified).map(({ value }) => value);
+    const classNames: string[] = getClassNames(classified).map(
+        ({ value }) => value,
+    );
 
     const finalClassName = classNames.join(" ");
     return finalClassName;

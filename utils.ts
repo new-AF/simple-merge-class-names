@@ -3,7 +3,7 @@ import {
     Classified,
     ClassifiedInvalid,
     ClassifiedInavlidReason,
-    ClassifiedValid,
+    ClassifiedClassName,
 } from "./types";
 
 // classifies input arguments
@@ -12,20 +12,19 @@ export const classify = (value: ValidArgument): Classified => {
     // The core computes data.
     // because TS types disappear in JS runtime
 
-    // valid
+    // valid but ignore
     if (value === false) {
         return {
+            status: "ignore",
             value,
-            isValid: true,
-            ignore: true,
         };
     }
 
     // invalid
     if (typeof value !== "string") {
         return {
+            status: "invalid",
             value,
-            isValid: false,
             reason: ClassifiedInavlidReason.NotAString,
         };
     }
@@ -35,8 +34,8 @@ export const classify = (value: ValidArgument): Classified => {
     // invalid.
     if (value === "") {
         return {
+            status: "invalid",
             value,
-            isValid: false,
             reason: ClassifiedInavlidReason.EmptyString,
         };
     }
@@ -46,30 +45,27 @@ export const classify = (value: ValidArgument): Classified => {
     // invalid
     if (trimmed === "") {
         return {
-            value: trimmed,
-            isValid: false,
+            status: "invalid",
+            value,
             reason: ClassifiedInavlidReason.Whitespace,
         };
     }
 
     // valid
     return {
+        status: "class-name",
         value: trimmed,
-        isValid: true,
-        ignore: false,
     };
 };
 
 // get only valid objects
-export const getValid = (values: Classified[]): ClassifiedValid[] => {
-    return values.filter(
-        (obj): obj is ClassifiedValid => obj.isValid && !obj.ignore,
-    );
+export const getClassNames = (values: Classified[]): ClassifiedClassName[] => {
+    return values.filter((obj) => obj.status === "class-name");
 };
 
 // get only valid objects
 export const getInvalid = (values: Classified[]): ClassifiedInvalid[] => {
-    return values.filter((obj): obj is ClassifiedInvalid => !obj.isValid);
+    return values.filter((obj) => obj.status === "invalid");
 };
 
 export const warningMessage = ({
@@ -81,7 +77,7 @@ export const warningMessage = ({
         reason === ClassifiedInavlidReason.NotAString &&
         (value === null || value === undefined)
     ) {
-        return `Ignored invalid argument: ${value}`;
+        return `Ignore invalid argument: ${value}`;
     }
 
     // array
@@ -90,21 +86,21 @@ export const warningMessage = ({
         const string = sub.join(", ");
         const ellipsisPart = value.length > sub.length ? ", ..." : "";
 
-        return `Ignored invalid argument, array: [${string}${ellipsisPart}]`;
+        return `Ignore invalid argument, array: [${string}${ellipsisPart}]`;
     }
 
     // empty string
     if (reason === ClassifiedInavlidReason.EmptyString) {
-        return `Ignored invalid argument: empty string.`;
+        return `Ignore invalid argument: empty string.`;
     }
 
     // whitespace
     if (reason === ClassifiedInavlidReason.Whitespace) {
-        return `Ignored invalid argument, whitespace string: "${value}"`;
+        return `Ignore invalid argument, whitespace string: "${value}"`;
     }
 
     // object
-    return `Ignored invalid argument, Object: ${value}`;
+    return `Ignore invalid argument, Object: ${value}`;
 };
 
 // console.warn
