@@ -14,10 +14,10 @@ export type ClassifiedValueFalse = {
 export type ClassifiedInvalid = {
     status: "invalid";
     value: unknown;
-    reason: ClassifiedInavlidReason;
+    reason: ClassifiedInvalidReason;
 };
 
-export enum ClassifiedInavlidReason {
+export enum ClassifiedInvalidReason {
     NotAString,
     EmptyString,
     Whitespace,

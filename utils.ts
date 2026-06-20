@@ -2,7 +2,7 @@ import {
     ValidArgument,
     Classified,
     ClassifiedInvalid,
-    ClassifiedInavlidReason,
+    ClassifiedInvalidReason,
     ClassifiedClassName,
 } from "./types";
 
@@ -25,7 +25,7 @@ export const classify = (value: ValidArgument): Classified => {
         return {
             status: "invalid",
             value,
-            reason: ClassifiedInavlidReason.NotAString,
+            reason: ClassifiedInvalidReason.NotAString,
         };
     }
 
@@ -36,7 +36,7 @@ export const classify = (value: ValidArgument): Classified => {
         return {
             status: "invalid",
             value,
-            reason: ClassifiedInavlidReason.EmptyString,
+            reason: ClassifiedInvalidReason.EmptyString,
         };
     }
 
@@ -47,7 +47,7 @@ export const classify = (value: ValidArgument): Classified => {
         return {
             status: "invalid",
             value,
-            reason: ClassifiedInavlidReason.Whitespace,
+            reason: ClassifiedInvalidReason.Whitespace,
         };
     }
 
@@ -74,33 +74,33 @@ export const warningMessage = ({
 }: ClassifiedInvalid): string => {
     // null or undefined
     if (
-        reason === ClassifiedInavlidReason.NotAString &&
+        reason === ClassifiedInvalidReason.NotAString &&
         (value === null || value === undefined)
     ) {
         return `Ignore invalid argument: ${value}`;
     }
 
     // array
-    if (reason === ClassifiedInavlidReason.NotAString && Array.isArray(value)) {
+    if (reason === ClassifiedInvalidReason.NotAString && Array.isArray(value)) {
         const sub = value.slice(0, 3);
         const string = sub.join(", ");
         const ellipsisPart = value.length > sub.length ? ", ..." : "";
 
-        return `Ignore invalid argument, array: [${string}${ellipsisPart}]`;
+        return `Ignore invalid argument: array ([${string}${ellipsisPart}])`;
     }
 
     // empty string
-    if (reason === ClassifiedInavlidReason.EmptyString) {
+    if (reason === ClassifiedInvalidReason.EmptyString) {
         return `Ignore invalid argument: empty string.`;
     }
 
     // whitespace
-    if (reason === ClassifiedInavlidReason.Whitespace) {
-        return `Ignore invalid argument, whitespace string: "${value}"`;
+    if (reason === ClassifiedInvalidReason.Whitespace) {
+        return `Ignore invalid argument: whitespace string ("${value}")`;
     }
 
     // object
-    return `Ignore invalid argument, Object: ${value}`;
+    return `Ignore invalid argument: Object (${value})`;
 };
 
 // console.warn
