@@ -77,7 +77,7 @@ export const warningMessage = ({
         const string = sub.join(", ");
         const ellipsisPart = value.length > sub.length ? ", ..." : "";
 
-        return `Ignored invalid argument, array: [${string}${ellipsisPart}] ...`;
+        return `Ignored invalid argument, array: [${string}${ellipsisPart}]`;
     }
 
     // empty string
@@ -91,7 +91,7 @@ export const warningMessage = ({
     }
 
     // object
-    return `Ignored invalid argument, Object: "${value}"`;
+    return `Ignored invalid argument, Object: ${value}`;
 };
 
 // console.warn

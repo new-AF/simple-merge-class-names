@@ -1,6 +1,6 @@
 import { test, expect, vi } from "vitest";
 import { mergeClassNames, mergeClassNamesDebugger } from "../mergeClassNames";
-import { warningMessage, classify, warningMessage } from "../utils";
+import { warningMessage, classify } from "../utils";
 
 const cases = [
     {
