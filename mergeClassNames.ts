@@ -35,6 +35,7 @@ import {
     ValidArgument,
     ClassifiedInvalidFunction,
     ClassifiedInvalid,
+    CustomOptions,
 } from "./types";
 
 import {
@@ -67,14 +68,8 @@ const mergeClassNamesCore = (
     return finalClassName;
 };
 
-// options to createCustomMergeClassNames
-type Options = {
-    "console-warn-invalid-and-whitespace-arguments": boolean;
-    "activate-debugger-on-invalid-arguments": boolean;
-};
-
 // creates custom mergeClassNames e.g. warn = false, activate debugger = true
-export const createCustomMergeClassNames = (options: Options) => {
+export const createCustomMergeClassNames = (options: CustomOptions) => {
     const invalidHandlers: ClassifiedInvalidFunction[] = [];
 
     if (options["console-warn-invalid-and-whitespace-arguments"]) {

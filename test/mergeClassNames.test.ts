@@ -1,5 +1,9 @@
 import { test, expect, vi } from "vitest";
-import { mergeClassNames, mergeClassNamesDebugger } from "../mergeClassNames";
+import {
+    mergeClassNames,
+    mergeClassNamesDebugger,
+    createCustomMergeClassNames,
+} from "../mergeClassNames";
 import { warningMessage, classify, getInvalid } from "../utils";
 
 const tests = [
@@ -32,19 +36,25 @@ const tests = [
     },
 ];
 
+// all 4 combinations of custom merge class names
+const allFunctions = {
+    mergeClassNames: mergeClassNames,
+    mergeClassNamesDebugger: mergeClassNamesDebugger,
+};
+
 const prettyPrint = (value: unknown) => JSON.stringify(value, null, 4);
 
 tests.forEach(({ input, className, consoleWarns }) => {
-    const stringifiedArray = prettyPrint(input).slice(1, -1);
+    const allArguments: string = prettyPrint(input).slice(1, -1);
 
-    const warnings = consoleWarns
+    const warnings: string[] = consoleWarns
         ? getInvalid(input.map(classify)).map(warningMessage)
         : [];
 
     const display = `
-mergeClassNames(${stringifiedArray})
+mergeClassNames(${allArguments})
 
-mergeClassNamesDebugger(${stringifiedArray})
+mergeClassNamesDebugger(${allArguments})
 
 ==> Expected warnings: ${prettyPrint(warnings)}
 

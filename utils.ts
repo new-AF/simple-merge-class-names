@@ -72,7 +72,6 @@ export const warningMessage = ({
     value,
     reason,
 }: ClassifiedInvalid): string => {
-    // null or undefined
     if (reason === ClassifiedInvalidReason.NotAString) {
         // null, undefined
         if (value === null || value === undefined) {
@@ -87,7 +86,7 @@ export const warningMessage = ({
         // array
         if (Array.isArray(value)) {
             const sub = value.slice(0, 3);
-            const string = sub.join(", ");
+            const string = JSON.stringify(sub).slice(1, -1);
             const ellipsisPart = value.length > sub.length ? ", ..." : "";
 
             return `Ignored non-string argument: array ([${string}${ellipsisPart}])`;
