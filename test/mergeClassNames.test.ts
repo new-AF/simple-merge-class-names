@@ -1,8 +1,8 @@
 import { test, expect, vi } from "vitest";
 import { mergeClassNames, mergeClassNamesDebugger } from "../mergeClassNames";
-import { warningMessage, classify } from "../utils";
+import { warningMessage, classify, getInvalid } from "../utils";
 
-const cases = [
+const tests = [
     {
         input: [],
         className: "",
@@ -34,14 +34,11 @@ const cases = [
 
 const prettyPrint = (value: unknown) => JSON.stringify(value, null, 4);
 
-cases.forEach(({ input, className, consoleWarns }) => {
-    const stringifiedArray = prettyPrint(input);
+tests.forEach(({ input, className, consoleWarns }) => {
+    const stringifiedArray = prettyPrint(input).slice(1, -1);
 
     const warnings = consoleWarns
-        ? input
-              .map(classify)
-              .filter((obj) => !obj.isValid)
-              .map(warningMessage)
+        ? getInvalid(input.map(classify)).map(warningMessage)
         : [];
 
     const display = `

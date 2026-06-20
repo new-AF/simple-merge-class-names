@@ -38,7 +38,13 @@ import {
     ClassifiedInvalid,
 } from "./types";
 
-import { classify, warn, activateDebugger } from "./utils";
+import {
+    classify,
+    getValid,
+    getInvalid,
+    warn,
+    activateDebugger,
+} from "./utils";
 
 // joins valid strings into final className
 const mergeClassNamesCore = (
@@ -50,17 +56,11 @@ const mergeClassNamesCore = (
 
     // optional call invalid arguments handlers: warn and/or activate debugger
     if (onInvalidArgument) {
-        classified
-            .filter((obj): obj is ClassifiedInvalid => {
-                return !obj.isValid;
-            })
-            .forEach(onInvalidArgument);
+        getInvalid(classified).forEach(onInvalidArgument);
     }
 
     // valid strings only
-    const classNames = classified
-        .filter((obj): obj is ClassifiedValid => obj.isValid && !obj.ignore)
-        .map(({ value }) => value as string);
+    const classNames = getValid(classified).map(({ value }) => value as string);
 
     const finalClassName = classNames.join(" ");
     return finalClassName;

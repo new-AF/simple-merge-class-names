@@ -3,6 +3,7 @@ import {
     Classified,
     ClassifiedInvalid,
     ClassifiedInavlidReason,
+    ClassifiedValid,
 } from "./types";
 
 // classifies input arguments
@@ -57,6 +58,18 @@ export const classify = (value: ValidArgument): Classified => {
         isValid: true,
         ignore: false,
     };
+};
+
+// get only valid objects
+export const getValid = (values: Classified[]): ClassifiedValid[] => {
+    return values.filter(
+        (obj): obj is ClassifiedValid => obj.isValid && !obj.ignore,
+    );
+};
+
+// get only valid objects
+export const getInvalid = (values: Classified[]): ClassifiedInvalid[] => {
+    return values.filter((obj): obj is ClassifiedInvalid => !obj.isValid);
 };
 
 export const warningMessage = ({
