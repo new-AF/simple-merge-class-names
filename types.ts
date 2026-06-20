@@ -31,4 +31,4 @@ export type Classified =
     | ClassifiedInvalid;
 
 // called on invalid arguments, warns or activates debugger or both
-export type InavlidArgumentFunction = (value: ClassifiedInvalid) => void;
+export type ClassifiedInvalidFunction = (value: ClassifiedInvalid) => void;

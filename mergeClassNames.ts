@@ -33,7 +33,7 @@ Invalid arguments: anything else e.g.
 
 import {
     ValidArgument,
-    InavlidArgumentFunction,
+    ClassifiedInvalidFunction,
     ClassifiedInvalid,
 } from "./types";
 
@@ -48,14 +48,14 @@ import {
 // joins valid strings into final className
 const mergeClassNamesCore = (
     values: ValidArgument[],
-    onInvalidArgument?: InavlidArgumentFunction,
+    onClassifiedInvalid?: ClassifiedInvalidFunction,
 ) => {
     // classify arguments
     const classified = values.map(classify);
 
     // optional call invalid arguments handlers: warn and/or activate debugger
-    if (onInvalidArgument) {
-        getInvalid(classified).forEach(onInvalidArgument);
+    if (onClassifiedInvalid) {
+        getInvalid(classified).forEach(onClassifiedInvalid);
     }
 
     // valid strings only
@@ -73,7 +73,7 @@ type Options = {
 
 // creates custom mergeClassNames e.g. warn = false, activate debugger = true
 const createCustomMergeClassNames = (options: Options) => {
-    const invalidHandlers: InavlidArgumentFunction[] = [];
+    const invalidHandlers: ClassifiedInvalidFunction[] = [];
 
     if (options["console-warn-invalid-and-whitespace-arguments"]) {
         invalidHandlers.push(warn);
