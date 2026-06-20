@@ -12,10 +12,10 @@ export const classify = (value: ValidArgument): Classified => {
     // The core computes data.
     // because TS types disappear in JS runtime
 
-    // valid but ignore
+    // valid but ignored
     if (value === false) {
         return {
-            status: "ignore",
+            status: "ignored",
             value,
         };
     }
@@ -73,34 +73,39 @@ export const warningMessage = ({
     reason,
 }: ClassifiedInvalid): string => {
     // null or undefined
-    if (
-        reason === ClassifiedInvalidReason.NotAString &&
-        (value === null || value === undefined)
-    ) {
-        return `Ignore invalid argument: ${value}`;
-    }
+    if (reason === ClassifiedInvalidReason.NotAString) {
+        // null, undefined
+        if (value === null || value === undefined) {
+            return `Ignored non-string argument: ${value}`;
+        }
 
-    // array
-    if (reason === ClassifiedInvalidReason.NotAString && Array.isArray(value)) {
-        const sub = value.slice(0, 3);
-        const string = sub.join(", ");
-        const ellipsisPart = value.length > sub.length ? ", ..." : "";
+        // true (because false was filtered out)
+        if (value === true) {
+            return `Ignored non-string argument: ${value} (boolean)`;
+        }
 
-        return `Ignore invalid argument: array ([${string}${ellipsisPart}])`;
+        // array
+        if (Array.isArray(value)) {
+            const sub = value.slice(0, 3);
+            const string = sub.join(", ");
+            const ellipsisPart = value.length > sub.length ? ", ..." : "";
+
+            return `Ignored non-string argument: array ([${string}${ellipsisPart}])`;
+        }
     }
 
     // empty string
     if (reason === ClassifiedInvalidReason.EmptyString) {
-        return `Ignore invalid argument: empty string.`;
+        return `Ignored empty string argument.`;
     }
 
     // whitespace
     if (reason === ClassifiedInvalidReason.Whitespace) {
-        return `Ignore invalid argument: whitespace string ("${value}")`;
+        return `Ignored whitespace string argument: "${value}"`;
     }
 
-    // object
-    return `Ignore invalid argument: Object (${value})`;
+    // object, symbol, etc.
+    return `Ignored non-string argument: ${value} (${typeof value})`;
 };
 
 // console.warn
