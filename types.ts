@@ -1,12 +1,18 @@
 export type ValidArgument = string | false;
 
 export type ClassifiedValid = {
-    value: ValidArgument;
+    value: string;
     isValid: true;
-
-    // for value `false` ignore including it in classNames
-    ignore?: boolean;
+    ignore: false;
 };
+
+// for value `false` ignore including it in classNames
+export type ClassifiedValueFalse = {
+    value: false;
+    isValid: true;
+    ignore: true;
+};
+
 export enum ClassifiedInavlidReason {
     NotAString,
     EmptyString,
@@ -19,7 +25,10 @@ export type ClassifiedInvalid = {
     reason: ClassifiedInavlidReason;
 };
 
-export type Classified = ClassifiedValid | ClassifiedInvalid;
+export type Classified =
+    | ClassifiedValid
+    | ClassifiedValueFalse
+    | ClassifiedInvalid;
 
 // called on invalid arguments, warns or activates debugger or both
 export type InavlidArgumentFunction = (value: ClassifiedInvalid) => void;

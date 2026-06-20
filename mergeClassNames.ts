@@ -34,7 +34,6 @@ Invalid arguments: anything else e.g.
 import {
     ValidArgument,
     InavlidArgumentFunction,
-    ClassifiedValid,
     ClassifiedInvalid,
 } from "./types";
 
@@ -60,7 +59,7 @@ const mergeClassNamesCore = (
     }
 
     // valid strings only
-    const classNames = getValid(classified).map(({ value }) => value as string);
+    const classNames: string[] = getValid(classified).map(({ value }) => value);
 
     const finalClassName = classNames.join(" ");
     return finalClassName;
