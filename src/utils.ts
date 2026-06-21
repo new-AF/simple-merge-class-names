@@ -1,5 +1,4 @@
 import {
-    ValidArgument,
     Classified,
     ClassifiedInvalid,
     ClassifiedInvalidReason,
@@ -7,7 +6,7 @@ import {
 } from "./types";
 
 // classifies input arguments
-export const classify = (value: ValidArgument): Classified => {
+export const classify = (value: string | false): Classified => {
     // FP pattern of mapping values with extra information.
     // The core computes data.
     // because TS types disappear in JS runtime
@@ -108,10 +107,10 @@ export const warningMessage = ({
 };
 
 // console.warn
-export const warn = (invalid: ClassifiedInvalid) => {
+export const warn = (invalid: ClassifiedInvalid, functionName: string) => {
     const warning = warningMessage(invalid);
 
-    console.warn(warning);
+    console.warn(`[${functionName}]`, warning);
 };
 
 // activates debugger

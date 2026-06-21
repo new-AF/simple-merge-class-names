@@ -68,7 +68,9 @@ mergeClassNamesDebugger(${allArguments})
 
         expect(mergeClassNames(...input)).toBe(className);
 
-        expect(warnSpy.mock.calls.map(([message]) => message)).toEqual(
+        const results = warnSpy.mock.calls;
+
+        expect(results.map(([functionName, message]) => message)).toEqual(
             warnings,
         );
 

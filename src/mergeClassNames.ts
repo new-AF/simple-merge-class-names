@@ -19,20 +19,21 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  
 
-Valid arguments:
-    1) valid strings, which are non-empty strings, and non-whitespace strings
+Only Valid Arguments:
+    1) valid strings: non-empty, non-whitespace
     2) value `false`
 
 Invalid arguments: anything else e.g.
     - empty strings
     - whitespace strings
+    - arrays
     - numbers
+    - objects
     - value true
-    - 
+    - etc.
 */
 
 import {
-    ValidArgument,
     ClassifiedInvalidFunction,
     ClassifiedInvalid,
     CustomOptions,
@@ -48,7 +49,7 @@ import {
 
 // joins valid strings into final className
 const mergeClassNamesCore = (
-    values: ValidArgument[],
+    values: (string | false)[],
     onClassifiedInvalid?: ClassifiedInvalidFunction,
 ) => {
     // classify arguments
@@ -72,8 +73,11 @@ const mergeClassNamesCore = (
 export const createCustomMergeClassNames = (options: CustomOptions) => {
     const invalidHandlers: ClassifiedInvalidFunction[] = [];
 
+    // will be logged in console
+    const functionName = options.name ?? "Custom mergeClassNames";
+
     if (options["console-warn-invalid-and-whitespace-arguments"]) {
-        invalidHandlers.push(warn);
+        invalidHandlers.push((arg) => warn(arg, functionName));
     }
 
     if (options["activate-debugger-on-invalid-arguments"]) {
@@ -85,7 +89,7 @@ export const createCustomMergeClassNames = (options: CustomOptions) => {
     };
 
     // construct the mergeClassNames function
-    return (...input: ValidArgument[]) =>
+    return (...input: (string | false)[]) =>
         mergeClassNamesCore(
             input,
             invalidHandlers.length > 0 ? combinedInvalidHandler : undefined,
@@ -95,9 +99,11 @@ export const createCustomMergeClassNames = (options: CustomOptions) => {
 export const mergeClassNames = createCustomMergeClassNames({
     "console-warn-invalid-and-whitespace-arguments": true,
     "activate-debugger-on-invalid-arguments": false,
+    name: "mergeClassNames",
 });
 
 export const mergeClassNamesDebugger = createCustomMergeClassNames({
     "console-warn-invalid-and-whitespace-arguments": true,
     "activate-debugger-on-invalid-arguments": true,
+    name: "mergeClassNamesDebugger",
 });

@@ -1,4 +1,4 @@
-export type ValidArgument = string | false;
+// export type ValidArgument = string | false;
 
 export type ClassifiedClassName = {
     status: "class-name";
@@ -35,4 +35,5 @@ export type ClassifiedInvalidFunction = (value: ClassifiedInvalid) => void;
 export type CustomOptions = {
     "console-warn-invalid-and-whitespace-arguments": boolean;
     "activate-debugger-on-invalid-arguments": boolean;
+    name?: string;
 };
