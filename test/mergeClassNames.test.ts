@@ -10,12 +10,11 @@ const tests = [
     {
         input: [],
         className: "",
-        consoleWarns: false,
     },
-    { input: [false], className: "", consoleWarns: false },
-    { input: [null, undefined, ""], className: "", consoleWarns: true }, // these will console.warn
-    { input: ["app"], className: "app", consoleWarns: false },
-    { input: [" app  ", false], className: "app", consoleWarns: false },
+    { input: [false], className: "" },
+    { input: [null, undefined, ""], className: "" },
+    { input: ["app"], className: "app" },
+    { input: [" app  ", false], className: "app" },
     {
         input: [
             "  app ",
@@ -32,50 +31,85 @@ const tests = [
             "   ",
         ], // this one too
         className: "app min-h-dvh grid grid-rows-[auto_1fr_auto] outline",
-        consoleWarns: true,
     },
 ];
 
-// all 4 combinations of custom merge class names
 const allFunctions = {
-    mergeClassNames: mergeClassNames,
-    mergeClassNamesDebugger: mergeClassNamesDebugger,
+    // warnings: true  activate-debugger: true
+    mergeClassNamesDebugger: {
+        func: mergeClassNamesDebugger,
+        warnings: true,
+        "activate-debugger": true,
+    },
+
+    // warnings: true  activate-debugger: false
+    mergeClassNames: {
+        func: mergeClassNames,
+        warnings: true,
+        "activate-debugger": false,
+    },
+
+    // warnings: false  activate-debugger: true
+    "warnings: false  activate-debugger: true; Custom mergeClassNames": {
+        func: createCustomMergeClassNames({
+            warnings: false,
+            "activate-debugger": true,
+        }),
+        warnings: false,
+        "activate-debugger": true,
+    },
+
+    // warnings: false  activate-debugger: false
+    "warnings: false  activate-debugger: false; Custom mergeClassNames": {
+        func: createCustomMergeClassNames({
+            warnings: false,
+            "activate-debugger": false,
+        }),
+        warnings: false,
+        "activate-debugger": false,
+    },
 };
 
 const prettyPrint = (value: unknown) => JSON.stringify(value, null, 4);
 
-tests.forEach(({ input, className, consoleWarns }) => {
-    const allArguments: string = prettyPrint(input).slice(1, -1);
+for (const [
+    functionName,
+    { func, warnings, "activate-debugger": activateDebugger },
+] of Object.entries(allFunctions)) {
+    tests.forEach(({ input, className }) => {
+        const allArguments: string = prettyPrint(input).slice(1, -1);
+        const consoleWarnings: string[] = warnings
+            ? getInvalid(input.map(classify)).map(warningMessage)
+            : [];
 
-    const warnings: string[] = consoleWarns
-        ? getInvalid(input.map(classify)).map(warningMessage)
-        : [];
+        const display = `
+============================================
+${functionName}(${allArguments})
 
-    const display = `
-mergeClassNames(${allArguments})
+-> warnings: ${warnings}
+-> 'activate-debugger': ${activateDebugger}
 
-mergeClassNamesDebugger(${allArguments})
-
-==> Expected warnings: ${prettyPrint(warnings)}
-
-==> Expected output: "${className}"
-
+==> Expected warnings: ${prettyPrint(consoleWarnings)}
+==> Expected className: "${className}"
 `;
 
-    test(display, () => {
-        // console.warn suppress output
-        const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+        test(display, () => {
+            // console.warn suppress output
+            const warnSpy = vi
+                .spyOn(console, "warn")
+                .mockImplementation(() => {});
 
-        expect(mergeClassNames(...input)).toBe(className);
+            expect(func(...input)).toBe(className);
 
-        const results = warnSpy.mock.calls;
+            const results = warnSpy.mock.calls;
 
-        expect(results.map(([functionName, message]) => message)).toEqual(
-            warnings,
-        );
+            expect(results.map(([functionName, message]) => message)).toEqual(
+                consoleWarnings,
+            );
 
-        expect(mergeClassNamesDebugger(...input)).toBe(className);
+            expect(mergeClassNamesDebugger(...input)).toBe(className);
 
-        warnSpy.mockRestore();
+            warnSpy.mockRestore();
+        });
     });
-});
+}

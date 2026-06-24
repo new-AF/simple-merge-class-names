@@ -33,7 +33,7 @@ export type ClassifiedInvalidFunction = (value: ClassifiedInvalid) => void;
 
 // options to createCustomMergeClassNames
 export type CustomOptions = {
-    "console-warn-invalid-and-whitespace-arguments": boolean;
-    "activate-debugger-on-invalid-arguments": boolean;
+    warnings?: boolean;
+    "activate-debugger"?: boolean;
     name?: string;
 };

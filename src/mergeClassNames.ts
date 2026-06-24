@@ -73,14 +73,16 @@ const mergeClassNamesCore = (
 export const createCustomMergeClassNames = (options: CustomOptions) => {
     const invalidHandlers: ClassifiedInvalidFunction[] = [];
 
-    // will be logged in console
+    // default: Custom mergeClassNames.  will be logged in console
     const functionName = options.name ?? "Custom mergeClassNames";
 
-    if (options["console-warn-invalid-and-whitespace-arguments"]) {
+    // default: falsey
+    if (options["warnings"]) {
         invalidHandlers.push((arg) => warn(arg, functionName));
     }
 
-    if (options["activate-debugger-on-invalid-arguments"]) {
+    // default: falsy
+    if (options["activate-debugger"]) {
         invalidHandlers.push(activateDebugger);
     }
 
@@ -97,13 +99,13 @@ export const createCustomMergeClassNames = (options: CustomOptions) => {
 };
 
 export const mergeClassNames = createCustomMergeClassNames({
-    "console-warn-invalid-and-whitespace-arguments": true,
-    "activate-debugger-on-invalid-arguments": false,
+    warnings: true,
+    "activate-debugger": false,
     name: "mergeClassNames",
 });
 
 export const mergeClassNamesDebugger = createCustomMergeClassNames({
-    "console-warn-invalid-and-whitespace-arguments": true,
-    "activate-debugger-on-invalid-arguments": true,
+    warnings: true,
+    "activate-debugger": true,
     name: "mergeClassNamesDebugger",
 });
