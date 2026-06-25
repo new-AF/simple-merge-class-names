@@ -79,7 +79,9 @@ for (const [
     tests.forEach(({ input, className }) => {
         const allArguments: string = prettyPrint(input).slice(1, -1);
         const consoleWarnings: string[] = warnings
-            ? getInvalid(input.map(classify)).map(warningMessage)
+            ? getInvalid(input.map(classify)).map((obj) =>
+                  warningMessage(obj, functionName),
+              )
             : [];
 
         const display = `
@@ -101,11 +103,12 @@ ${functionName}(${allArguments})
 
             expect(func(...input)).toBe(className);
 
-            const results = warnSpy.mock.calls;
+            // [ [ '[mergeClassNames]', 'Ignored non-string argument: undefined' ], ... ]
+            const results = warnSpy.mock.calls.flat();
 
-            expect(results.map(([functionName, message]) => message)).toEqual(
-                consoleWarnings,
-            );
+            // console.log({ results });
+
+            expect(results).toEqual(consoleWarnings);
 
             expect(mergeClassNamesDebugger(...input)).toBe(className);
 

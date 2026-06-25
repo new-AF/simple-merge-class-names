@@ -67,19 +67,21 @@ export const getInvalid = (values: Classified[]): ClassifiedInvalid[] => {
     return values.filter((obj) => obj.status === "invalid");
 };
 
-export const warningMessage = ({
-    value,
-    reason,
-}: ClassifiedInvalid): string => {
+export const warningMessage = (
+    { value, reason }: ClassifiedInvalid,
+    functionName: string,
+): string => {
+    const format = (message: string) => `[${functionName}] ${message}`;
+
     if (reason === ClassifiedInvalidReason.NotAString) {
         // null, undefined
         if (value === null || value === undefined) {
-            return `Ignored non-string argument: ${value}`;
+            return format(`Ignored non-string argument: ${value}`);
         }
 
         // true (because false was filtered out)
         if (value === true) {
-            return `Ignored non-string argument: ${value} (boolean)`;
+            return format(`Ignored non-string argument: ${value} (boolean)`);
         }
 
         // array
@@ -88,29 +90,31 @@ export const warningMessage = ({
             const string = JSON.stringify(sub).slice(1, -1);
             const ellipsisPart = value.length > sub.length ? ", ..." : "";
 
-            return `Ignored non-string argument: array ([${string}${ellipsisPart}])`;
+            return format(
+                `Ignored non-string argument: array ([${string}${ellipsisPart}])`,
+            );
         }
     }
 
     // empty string
     if (reason === ClassifiedInvalidReason.EmptyString) {
-        return `Ignored empty string argument.`;
+        return format(`Ignored empty string argument.`);
     }
 
     // whitespace
     if (reason === ClassifiedInvalidReason.Whitespace) {
-        return `Ignored whitespace string argument: "${value}"`;
+        return format(`Ignored whitespace string argument: "${value}"`);
     }
 
     // object, symbol, etc.
-    return `Ignored non-string argument: ${value} (${typeof value})`;
+    return format(`Ignored non-string argument: ${value} (${typeof value})`);
 };
 
 // console.warn
 export const warn = (invalid: ClassifiedInvalid, functionName: string) => {
-    const warning = warningMessage(invalid);
+    const warning = warningMessage(invalid, functionName);
 
-    console.warn(`[${functionName}]`, warning);
+    console.warn(warning);
 };
 
 // activates debugger

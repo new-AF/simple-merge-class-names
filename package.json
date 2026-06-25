@@ -20,7 +20,7 @@
         "build": "tsup",
         "prepublishOnly": "pnpm tsup",
         "test": "vitest",
-        "test:watch": "vitest --watch",
+        "test:watch": "vitest run --watch",
         "test:ui": "vitest --ui"
     },
     "keywords": [
