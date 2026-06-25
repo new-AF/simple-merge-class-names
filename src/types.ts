@@ -6,12 +6,12 @@ export type ClassifiedClassName = {
 };
 
 // for value `false` ignore including it in classNames
-export type ClassifiedValueFalse = {
+export type ClassifiedIgnore = {
     status: "ignore";
-    value: false;
+    value: unknown;
 };
 
-export type ClassifiedInvalid = {
+export type ClassifiedInvalidWarn = {
     status: "invalid";
     value: unknown;
     reason: ClassifiedInvalidReason;
@@ -25,11 +25,11 @@ export enum ClassifiedInvalidReason {
 
 export type Classified =
     | ClassifiedClassName
-    | ClassifiedValueFalse
-    | ClassifiedInvalid;
+    | ClassifiedIgnore
+    | ClassifiedInvalidWarn;
 
 // called on invalid arguments, warns or activates debugger or both
-export type ClassifiedInvalidFunction = (value: ClassifiedInvalid) => void;
+export type ClassifiedInvalidFunction = (value: ClassifiedInvalidWarn) => void;
 
 // options to createCustomMergeClassNames
 export type CustomOptions = {

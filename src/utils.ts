@@ -1,18 +1,25 @@
 import {
     Classified,
-    ClassifiedInvalid,
+    ClassifiedInvalidWarn,
     ClassifiedInvalidReason,
     ClassifiedClassName,
 } from "./types";
 
 // classifies input arguments
-export const classify = (value: string | false): Classified => {
+export const classify = (
+    value: string | undefined | null | false,
+): Classified => {
     // FP pattern of mapping values with extra information.
     // The core computes data.
     // because TS types disappear in JS runtime
 
     // valid but ignored
-    if (value === false) {
+    if (
+        value === false ||
+        value === undefined ||
+        value === null ||
+        value === ""
+    ) {
         return {
             status: "ignore",
             value,
@@ -29,15 +36,6 @@ export const classify = (value: string | false): Classified => {
     }
 
     // it's a string
-
-    // invalid.
-    if (value === "") {
-        return {
-            status: "invalid",
-            value,
-            reason: ClassifiedInvalidReason.EmptyString,
-        };
-    }
 
     const trimmed = value.trim();
 
@@ -63,12 +61,12 @@ export const getClassNames = (values: Classified[]): ClassifiedClassName[] => {
 };
 
 // get only valid objects
-export const getInvalid = (values: Classified[]): ClassifiedInvalid[] => {
+export const getInvalid = (values: Classified[]): ClassifiedInvalidWarn[] => {
     return values.filter((obj) => obj.status === "invalid");
 };
 
 export const warningMessage = (
-    { value, reason }: ClassifiedInvalid,
+    { value, reason }: ClassifiedInvalidWarn,
     functionName: string,
 ): string => {
     const format = (message: string) => `[${functionName}] ${message}`;
@@ -111,13 +109,13 @@ export const warningMessage = (
 };
 
 // console.warn
-export const warn = (invalid: ClassifiedInvalid, functionName: string) => {
+export const warn = (invalid: ClassifiedInvalidWarn, functionName: string) => {
     const warning = warningMessage(invalid, functionName);
 
     console.warn(warning);
 };
 
 // activates debugger
-export const activateDebugger = (_invalid: ClassifiedInvalid) => {
+export const activateDebugger = (_invalid: ClassifiedInvalidWarn) => {
     debugger;
 };

@@ -35,7 +35,7 @@ Invalid arguments: anything else e.g.
 
 import {
     ClassifiedInvalidFunction,
-    ClassifiedInvalid,
+    ClassifiedInvalidWarn,
     CustomOptions,
 } from "./types";
 
@@ -86,7 +86,7 @@ export const createCustomMergeClassNames = (options: CustomOptions) => {
         invalidHandlers.push(activateDebugger);
     }
 
-    const combinedInvalidHandler = (value: ClassifiedInvalid) => {
+    const combinedInvalidHandler = (value: ClassifiedInvalidWarn) => {
         invalidHandlers.forEach((func) => func(value));
     };
 

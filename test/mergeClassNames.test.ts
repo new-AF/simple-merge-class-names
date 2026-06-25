@@ -76,6 +76,8 @@ for (const [
     functionName,
     { func, warnings, "activate-debugger": activateDebugger },
 ] of Object.entries(allFunctions)) {
+    // if (!warnings) continue;
+
     tests.forEach(({ input, className }) => {
         const allArguments: string = prettyPrint(input).slice(1, -1);
         const consoleWarnings: string[] = warnings
