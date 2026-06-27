@@ -1,3 +1,7 @@
 // publicly exported functions
 
-export { mergeClassNames, mergeClassNamesDebugger } from "./mergeClassNames";
+export {
+    mergeClassNames,
+    mergeClassNamesDebugger,
+    createCustomMergeClassNames,
+} from "./mergeClassNames";
