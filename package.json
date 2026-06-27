@@ -1,6 +1,6 @@
 {
     "name": "simple-merge-class-names",
-    "version": "9.2.0",
+    "version": "9.3.0",
     "description": " A class names merger for TypeScript, JavaScript, TSX, and JSX (React)",
     "exports": {
         ".": {
