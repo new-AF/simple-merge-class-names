@@ -3,12 +3,11 @@ import {
     ClassifiedInvalidWarn,
     ClassifiedInvalidReason,
     ClassifiedClassName,
+    UserArgument,
 } from "./types";
 
 // classifies input arguments
-export const classify = (
-    value: string | undefined | null | false,
-): Classified => {
+export const classify = (value: UserArgument): Classified => {
     // FP pattern of mapping values with extra information.
     // The core computes data.
     // because TS types disappear in JS runtime

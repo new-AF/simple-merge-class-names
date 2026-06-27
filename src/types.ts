@@ -1,4 +1,4 @@
-// export type ValidArgument = string | false;
+export type UserArgument = string | undefined | null | false;
 
 export type ClassifiedClassName = {
     status: "class-name";

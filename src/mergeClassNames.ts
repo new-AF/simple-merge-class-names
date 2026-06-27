@@ -37,6 +37,7 @@ import {
     ClassifiedInvalidFunction,
     ClassifiedInvalidWarn,
     CustomOptions,
+    UserArgument,
 } from "./types";
 
 import {
@@ -49,7 +50,7 @@ import {
 
 // joins valid strings into final className
 const mergeClassNamesCore = (
-    values: (string | false)[],
+    values: UserArgument[],
     onClassifiedInvalid?: ClassifiedInvalidFunction,
 ) => {
     // classify arguments
@@ -70,6 +71,9 @@ const mergeClassNamesCore = (
 };
 
 // creates custom mergeClassNames e.g. warn = false, activate debugger = true
+/**
+ * type UserArgument = string | undefined | null | false;
+ */
 export const createCustomMergeClassNames = (options: CustomOptions) => {
     const invalidHandlers: ClassifiedInvalidFunction[] = [];
 
@@ -91,19 +95,25 @@ export const createCustomMergeClassNames = (options: CustomOptions) => {
     };
 
     // construct the mergeClassNames function
-    return (...input: (string | false)[]) =>
+    return (...input: UserArgument[]) =>
         mergeClassNamesCore(
             input,
             invalidHandlers.length > 0 ? combinedInvalidHandler : undefined,
         );
 };
 
+/**
+ * type UserArgument = string | undefined | null | false;
+ */
 export const mergeClassNames = createCustomMergeClassNames({
     warnings: true,
     "activate-debugger": false,
     name: "mergeClassNames",
 });
 
+/**
+ * type UserArgument = string | undefined | null | false;
+ */
 export const mergeClassNamesDebugger = createCustomMergeClassNames({
     warnings: true,
     "activate-debugger": true,
